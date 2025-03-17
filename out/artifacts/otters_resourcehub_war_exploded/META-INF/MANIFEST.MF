@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
 Created-By: IntelliJ IDEA
-Built-By: Mika
-Build-Jdk: Oracle OpenJDK version 1.8.0_181
+Built-By: arevikagopoian
+Build-Jdk: Amazon Corretto 17.0.14 - aarch64
 
