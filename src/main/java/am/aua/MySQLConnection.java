@@ -9,7 +9,7 @@ public class MySQLConnection {
         // Database URL
         String url = "jdbc:mysql://localhost:3306/resource";
         String user = "root";
-        String password = "Arevik2001";
+        String password = "admin123";
 
         try {
             // Establish connection (no need for Class.forName)
