@@ -11,10 +11,8 @@ DROP TABLE IF EXISTS resources;
 
 CREATE TABLE resources(
 	id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    -- resource_type  VARCHAR(20),
     title VARCHAR(255),
     developer VARCHAR(255),
-    -- target VARCHAR(500),
     region VARCHAR(255),
     resource_language VARCHAR(255),
     keywords VARCHAR(255),

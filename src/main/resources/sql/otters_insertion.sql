@@ -29,7 +29,7 @@ INSERT INTO resource_type (name) VALUES
 	('recording'),
 	('tutorial'),
 	('online course'),
-	('project deliverable'),
+	('deliverable'),
 	('catalogue'),
 	('digital application'),
 	('community platform'),
@@ -42,18 +42,54 @@ INSERT INTO target_audience (name) VALUES
 	('CS practitioners'),
 	('legal'),
 	('researchers'),
-    ('stakeholders');
+    ('stakeholders'),
+    ('academia');
+    
+INSERT INTO resource_has_target (resource_id, target_id) VALUES
+	(1, 2),
+    (2, 7),
+    (2, 2),
+    (2, 6),
+    (2, 8),
+    (3, 7),
+    (3, 2),
+    (3, 6),
+    (3, 8),
+    (4, 4),
+    (5, 4),
+    (6, 4),
+    (7, 4),
+    (7, 6),
+    (7, 8),
+    (8, 6),
+    (8, 4),
+    (9, 6),
+    (9, 4),
+    (9, 8),
+    (10, 6),
+    (11, 6),
+    (11, 4),
+    (12, 4),
+    (13, 1),
+    (13, 2),
+    (14, 1),
+    (14, 2);
+    
     
 INSERT INTO domain (name) VALUES
 	('freshwater'),
     ('marine');
 
+
 CALL AssignResourceTypes;
-
-
+CALL AssignResourceDomains;
 -- testing
-SELECT * FROM resource_has_type;
+SELECT * FROM resources;
 
-SELECT * FROM resources as r
-JOIN resource_has_type as rt ON r.id = rt.resource_id
-JOIN resource_type as t ON rt.type_id = t.id;
+SELECT r.*, t.name, a.name, d.name FROM resources as r
+LEFT JOIN resource_has_type as rt ON r.id = rt.resource_id
+LEFT JOIN resource_type as t ON rt.type_id = t.id
+LEFT JOIN resource_has_target as res_tar ON r.id = res_tar.resource_id
+LEFT JOIN target_audience as a ON res_tar.target_id = a.id
+LEFT JOIN resource_has_domain as rd ON r.id = rd.resource_id
+LEFT JOIN domain as d ON rd.domain_id = d.id;
