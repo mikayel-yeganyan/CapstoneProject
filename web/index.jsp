@@ -13,11 +13,15 @@
   </style>
 </head>
 
-<body class="body-navbar">
-<%@ include file="WEB-INF/imports/navbar.html" %>
+<body>
+<div class="page-wrapper">
+  <%@ include file="WEB-INF/imports/navbar.html" %>
 
-<div class="content-wrapper"></div>
+  <main class="main-content">
+    <!-- Your page content here -->
+  </main>
 
-<%@ include file="WEB-INF/imports/footer.html" %>
+  <%@ include file="WEB-INF/imports/footer.html" %>
+</div>
 </body>
 </html>

@@ -1,9 +1,12 @@
 .site-footer {
+    width: 100%;
+    padding: 40px 0 0;
     background: linear-gradient(to right, #1bb5be, #317bcb);
     color: white;
     font-family: 'Cairo', sans-serif;
-    padding: 40px 20px 20px;
+    flex-shrink: 0;
 }
+
 
 .footer-container {
     display: flex;
@@ -11,7 +14,7 @@
     flex-wrap: wrap;
     max-width: 1200px;
     margin: 0 auto;
-    gap: 40px;
+    gap: 0 20px;
 }
 
 .footer-left img {
@@ -90,16 +93,49 @@
     font-size: 18px;
     text-decoration: none;
 }
-
 .footer-bottom {
-    border-top: 1px solid rgba(255,255,255,0.2);
-    text-align: center;
-    font-size: 13px;
-    padding-top: 15px;
-    margin-top: 30px;
+    background-color: #1a3365;
+    color: white;
+    width: 100%;
+    padding: 0; /* remove vertical padding */
 }
 
-.footer-bottom a {
+.footer-bottom-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 30px 40px; /* adjust this value to align with the bottom of the flag */
+    font-size: 14px;
+    text-align: left;
+}
+
+.footer-bottom-content p {
+    margin: 0;
+    line-height: 1.6;
+}
+
+.footer-bottom-content a {
     color: white;
     text-decoration: underline;
+    margin-right: 10px;
 }
+
+/* Make page fill entire viewport */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+/* Flex container for the whole page */
+.page-wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Content grows to fill space */
+.main-content {
+    flex: 1;
+}
+
+
