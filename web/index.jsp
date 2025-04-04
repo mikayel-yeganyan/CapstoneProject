@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href='https://fonts.googleapis.com/css?family=Cairo' rel='stylesheet'>
+  <link rel="stylesheet" href="./css/footer.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
   <title>OTTERS Navigation</title>
   <style>
@@ -14,13 +16,7 @@
 <body class="body-navbar">
 <%@ include file="WEB-INF/imports/navbar.html" %>
 
-<div class="content-wrapper">
-  <!-- Page content goes here -->
-  <main>
-    <h1>Welcome to OTTERS</h1>
-    <p>This is your home page or intro section.</p>
-  </main>
-</div>
+<div class="content-wrapper"></div>
 
 <%@ include file="WEB-INF/imports/footer.html" %>
 </body>
