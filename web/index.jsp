@@ -11,10 +11,17 @@
   </style>
 </head>
 
+<body class="body-navbar">
 <%@ include file="WEB-INF/imports/navbar.html" %>
 
+<div class="content-wrapper">
+  <!-- Page content goes here -->
+  <main>
+    <h1>Welcome to OTTERS</h1>
+    <p>This is your home page or intro section.</p>
+  </main>
+</div>
 
-<body class="body-navbar">
-
+<%@ include file="WEB-INF/imports/footer.html" %>
 </body>
 </html>
