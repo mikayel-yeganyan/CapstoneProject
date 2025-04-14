@@ -137,5 +137,11 @@ html, body {
 .main-content {
     flex: 1;
 }
+.footer-left {
+    display: flex;
+    align-items: center;
+    gap: 16px; /* Space between logos */
+}
+
 
 
