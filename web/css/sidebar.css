@@ -1,0 +1,61 @@
+.main-container {
+    display: flex;
+    align-items: flex-start;
+    gap: 40px; /* Creates space between sidebar and content */
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+/* Sidebar */
+.filter-sidebar {
+    width: 300px;
+    padding: 25px 20px;
+    background: linear-gradient(to bottom right, #f1faff, #ffffff);
+    border: 1px solid #d4e9f9;
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0, 85, 160, 0.08);
+    font-family: 'Segoe UI', sans-serif;
+    color: #003366;
+}
+
+/* Sidebar heading */
+.filter-sidebar h3 {
+    font-size: 22px;
+    margin-bottom: 16px;
+}
+
+/* Filter group */
+.filter-group {
+    margin-bottom: 20px;
+}
+
+/* Input styling */
+.filter-group input[type="text"] {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #a0c8e8;
+    border-radius: 8px;
+    font-size: 14px;
+    box-sizing: border-box;
+    background-color: #ffffff;
+    margin-top: 5px;
+}
+
+/* Labels and checkboxes */
+.filter-group label {
+    display: block;
+    margin-top: 8px;
+    font-size: 15px;
+}
+
+input[type="checkbox"] {
+    margin-right: 8px;
+}
+
+/* Content on the right */
+.content-area {
+    flex: 1;
+    font-size: 18px;
+}
+

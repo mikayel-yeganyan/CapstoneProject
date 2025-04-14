@@ -6,6 +6,8 @@
   <link href='https://fonts.googleapis.com/css?family=Cairo' rel='stylesheet'>
   <link rel="stylesheet" href="./css/footer.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="./css/sidebar.css">
+
 
   <title>OTTERS Navigation</title>
   <style>
@@ -18,7 +20,7 @@
   <%@ include file="WEB-INF/imports/navbar.html" %>
 
   <main class="main-content">
-    <!-- Your page content here -->
+    <%@ include file="WEB-INF/imports/sidebar.html" %>
   </main>
 
   <%@ include file="WEB-INF/imports/footer.html" %>
