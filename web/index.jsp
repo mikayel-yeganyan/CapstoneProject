@@ -56,5 +56,7 @@
 
   </div>
 </div>
+
+<%@ include file="WEB-INF/imports/footer.html" %>
 </body>
 </html>
