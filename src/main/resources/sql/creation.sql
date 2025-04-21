@@ -1,37 +1,41 @@
 CREATE DATABASE IF NOT EXISTS otters;
 USE otters;
 
-DROP TABLE IF EXISTS resource_has_type;
+-- DROP TABLE IF EXISTS resource_has_type;
 DROP TABLE IF EXISTS resource_has_target;
 DROP TABLE IF EXISTS resource_has_domain;
-DROP TABLE IF EXISTS domain;
+DROP TABLE IF EXISTS domains;
 DROP TABLE IF EXISTS target_audience;
-DROP TABLE IF EXISTS resource_type;
 DROP TABLE IF EXISTS resources;
+DROP TABLE IF EXISTS resource_types;
 
-CREATE TABLE resources(
-	id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    title VARCHAR(255),
-    developer VARCHAR(255),
-    region VARCHAR(255),
-    resource_language VARCHAR(255),
-    keywords VARCHAR(255),
-    link VARCHAR(255)
-);
-
-
-CREATE TABLE resource_type(
+CREATE TABLE resource_types(
 	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(200) NOT NULL
 );
 
-CREATE TABLE resource_has_type(
-	resource_id INT NOT NULL,
-    type_id INT NOT NULL,
-    PRIMARY KEY(resource_id, type_id),
-    FOREIGN KEY(resource_id) REFERENCES resources(id),    
-	FOREIGN KEY(type_id) REFERENCES resource_type(id)
+CREATE TABLE resources(
+	id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    title VARCHAR(255),
+    type INT,
+    developer VARCHAR(255),
+    region VARCHAR(255),
+    resource_language VARCHAR(255),
+    keywords VARCHAR(255),
+    link VARCHAR(255),
+    FOREIGN KEY(type) REFERENCES resource_types(id)
 );
+
+
+
+
+-- CREATE TABLE resource_has_type(
+-- 	resource_id INT NOT NULL,
+--     type_id INT NOT NULL,
+--     PRIMARY KEY(resource_id, type_id),
+--     FOREIGN KEY(resource_id) REFERENCES resources(id),    
+-- 	FOREIGN KEY(type_id) REFERENCES resource_type(id)
+-- );
 
 
 CREATE TABLE target_audience(
@@ -48,7 +52,7 @@ CREATE TABLE resource_has_target(
 );
 
 
-CREATE TABLE domain(
+CREATE TABLE domains(
 	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(200) NOT NULL
 );
@@ -58,7 +62,7 @@ CREATE TABLE resource_has_domain(
     domain_id INT NOT NULL,
     PRIMARY KEY(resource_id, domain_id),
     FOREIGN KEY(resource_id) REFERENCES resources(id),
-    FOREIGN KEY(domain_id) REFERENCES domain(id)
+    FOREIGN KEY(domain_id) REFERENCES domains(id)
 );
 
 -- LOAD DATA INFILE 'C:\\ProgramData\\\MySQL\\\MySQL Server 8.0\\Uploads\\initialResourceSheet.csv' -- Change the path to the output of the query at line 25 (SHOW VARIABLES LIKE "secure_file_priv";)

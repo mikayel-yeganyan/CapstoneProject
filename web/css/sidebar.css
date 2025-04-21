@@ -1,0 +1,23 @@
+.sidebar {
+    width: 25%;
+    height: 100vh; /* 100% of the viewport height */
+    padding: 25px 20px;
+    background: linear-gradient(to bottom right, #f1faff, #ffffff);
+    border: 1px solid #d4e9f9;
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(0, 85, 160, 0.08);
+    overflow-y: auto;
+    overflow-x: hidden;
+    position: sticky;
+    top: 0;
+}
+
+
+.sidebar h3 {
+    font-size: 20px;
+}
+
+.filter-option {
+    margin-bottom: 10px;
+}
+
