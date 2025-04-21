@@ -16,7 +16,7 @@ INSERT INTO resources (title, developer, region, resource_language, keywords, li
 	('Rubrics for green competences assessment', 'NUCLIO', 'Europe', 'English', 'education, assessment tools, publication', 'https://assess.nuclio.org/wp-content/uploads/2024/03/GreenComp_Rubrics-EN-Final.pdf'),
 	('The ASSESS student assessment framework', 'NUCLIO', 'Europe', 'English', 'education, assessment tools, publication', 'https://assess.nuclio.org/the-assess-book/');
 
-INSERT INTO resource_type (name) VALUES
+INSERT INTO resource_types (name) VALUES
 	('publication'),
     ('report'),
 	('toolkit'),
@@ -76,20 +76,21 @@ INSERT INTO resource_has_target (resource_id, target_id) VALUES
     (14, 2);
     
     
-INSERT INTO domain (name) VALUES
+INSERT INTO domains (name) VALUES
 	('freshwater'),
     ('marine');
 
 
 CALL AssignResourceTypes;
 CALL AssignResourceDomains;
+
+
 -- testing
 SELECT * FROM resources;
 
-SELECT r.*, t.name, a.name, d.name FROM resources as r
-LEFT JOIN resource_has_type as rt ON r.id = rt.resource_id
-LEFT JOIN resource_type as t ON rt.type_id = t.id
+SELECT r.*, t.name AS type, a.name AS target, d.name AS domain FROM resources as r
+LEFT JOIN resource_types as t ON r.type = t.id
 LEFT JOIN resource_has_target as res_tar ON r.id = res_tar.resource_id
 LEFT JOIN target_audience as a ON res_tar.target_id = a.id
 LEFT JOIN resource_has_domain as rd ON r.id = rd.resource_id
-LEFT JOIN domain as d ON rd.domain_id = d.id;
+LEFT JOIN domains as d ON rd.domain_id = d.id;
