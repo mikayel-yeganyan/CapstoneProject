@@ -75,6 +75,7 @@ body {
     font-weight: bold;
     color: rgb(0, 100, 139);
     flex-grow: 1; /* Allows the title to take available space */
+    margin: 0;
 }
 
 .result-title p {
@@ -128,7 +129,7 @@ body {
 }
 
 .tag {
-    font-size: 0.95rem;
+    font-size: 0.85rem;
     padding: 6px 16px;
     background-color: #fff;
     color: #1a0dab;

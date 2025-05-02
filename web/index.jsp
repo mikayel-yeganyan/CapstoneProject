@@ -34,7 +34,6 @@
         <div class="result-card">
           <!-- Title (full width) -->
           <p class="result-title">Water</p>
-
           <!-- Description + Button on the same row -->
           <div class="description-row">
             <p class="result-description">
