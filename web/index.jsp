@@ -31,24 +31,29 @@
     <h2>9,594,816 results</h2>
     <ul>
       <li>
-        <div class="result-item">
-          <div class="result-title">
-            <p>India as a Leading Power</p>
-            <div class="result-meta"><p>Ashley J. Tellis - Carnegie Endowment for International Peace</p></div>
+        <div class="result-card">
+          <!-- Title (full width) -->
+          <p class="result-title">Water</p>
+
+          <!-- Description + Button on the same row -->
+          <div class="description-row">
+            <p class="result-description">
+              Water is an inorganic compound with the chemical formula H₂O. It is a transparent,
+              tasteless, odorless, and nearly colorless chemical substance.
+            </p>
+            <div class="result-actions">
+              <a href="#">
+                <button type="button">Link</button>
+              </a>
+            </div>
           </div>
-          <div class="result-actions">
-            <button>Link</button>
-          </div>
-        </div>
-      </li>
-      <li>
-        <div class="result-item">
-          <div class="result-title">
-            <p>Ideological Security as National Security</p>
-            <div class="result-meta"><p>Jude Blanchette - Center for Strategic and International Studies</p></div>
-          </div>
-          <div class="result-actions">
-            <button>Link</button>
+
+          <!-- Tags -->
+          <div class="keyword-tags">
+            <span class="tag">Drinking water</span>
+            <span class="tag">Properties</span>
+            <span class="tag">Fresh water</span>
+            <span class="tag">Water supply</span>
           </div>
         </div>
       </li>
