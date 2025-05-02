@@ -132,7 +132,7 @@ body {
     font-size: 0.85rem;
     padding: 6px 16px;
     background-color: #fff;
-    color: #1a0dab;
+    color: #6c757d; /* muted grey */
     border: 1px solid #dadce0;
     border-radius: 9999px;
     white-space: nowrap;
@@ -154,7 +154,8 @@ body {
 }
 .result-description {
     font-size: 1rem;
-    color: #003399;
+    font-weight: bold;
+    color: #6c757d; /* muted grey */
     flex: 1;
     margin-top: 6px;
 }
