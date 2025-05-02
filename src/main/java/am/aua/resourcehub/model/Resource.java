@@ -4,16 +4,16 @@ import java.util.List;
 
 public class Resource {
     private int id;
-    private String type;
     private String title;
+    private String type;
     private String developer;
-    private List<String> target;
     private String region;
-    private String description;
-    private List<String> domain;
     private String language;
     private String keywords;
     private String url;
+    private String description;
+    private List<String> target;
+    private List<String> domain;
 
     public Resource() {}
 

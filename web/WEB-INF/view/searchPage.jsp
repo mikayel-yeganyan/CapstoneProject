@@ -19,7 +19,7 @@
 
 <!-- Search Bar -->
 <div class="search-container">
-    <form class="search-form" action="search-resources" method="GET">
+    <form id="searchForm" class="search-form" action="search-resources" method="GET">
         <input type="text" class="search-box" placeholder="Search..." name="search-box">
         <button type="submit" class="search-button">Search</button>
     </form>
@@ -29,7 +29,7 @@
 <div class="main-container">
     <!-- Sidebar (Filters) -->
     <!-- Include the sidebar -->
-    <%@ include file="../imports/sidebar.jsp" %>
+    <jsp:include page="../imports/sidebar.jsp" />
 
     <!-- Search Results -->
     <div class="results-container">
