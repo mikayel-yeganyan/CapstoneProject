@@ -1,19 +1,24 @@
 package am.aua.resourcehub.model;
 
+import java.util.List;
+
 public class Resource {
     private int id;
-    private String type;
     private String title;
+    private String type;
     private String developer;
-    private String target;
     private String region;
     private String language;
     private String keywords;
-    private String link;
+    private String url;
+    private String description;
+    private List<String> target;
+    private List<String> domain;
 
     public Resource() {}
 
-    public Resource(String type, String title, String developer, String target, String region, String language, String keywords, String link) {
+    public Resource(int id, String type, String title, String developer, List<String> target, String region, String language, String keywords, String url) {
+        this.id = id;
         this.type = type;
         this.title = title;
         this.developer = developer;
@@ -21,7 +26,7 @@ public class Resource {
         this.region = region;
         this.language = language;
         this.keywords = keywords;
-        this.link = link;
+        this.url = url;
     }
 
     public int getId() { return id; }
@@ -36,8 +41,8 @@ public class Resource {
     public String getDeveloper() { return developer; }
     public void setDeveloper(String developer) { this.developer = developer; }
 
-    public String getTarget() { return target; }
-    public void setTarget(String target) { this.target = target; }
+    public List<String> getTarget() { return target; }
+    public void setTarget(List<String> target) { this.target = target; }
 
     public String getRegion() { return region; }
     public void setRegion(String region) { this.region = region; }
@@ -48,6 +53,12 @@ public class Resource {
     public String getKeywords() { return keywords; }
     public void setKeywords(String keywords) { this.keywords = keywords; }
 
-    public String getLink() { return link; }
-    public void setLink(String link) { this.link = link; }
+    public String getUrl() { return url; }
+    public void setUrl(String url) { this.url = url; }
+
+    public List<String> getDomain() { return domain; }
+    public void setDomain(List<String> domain) { this.domain = domain; }
+
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
 }

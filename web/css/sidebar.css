@@ -1,6 +1,6 @@
 .sidebar {
     width: 25%;
-    height: 100vh; /* 100% of the viewport height */
+    height: 90vh; /* 100% of the viewport height */
     padding: 25px 20px;
     background: linear-gradient(to bottom right, #f1faff, #ffffff);
     border: 1px solid #d4e9f9;
@@ -20,4 +20,24 @@
 .filter-option {
     margin-bottom: 10px;
 }
+.uncheck-button {
+    padding: 7px 6px;
+    /*background-color: rgb(5, 154, 229);*/
+    background-color: #0BB2B1;
+    color: white;
+    border: 1px solid #0BB2B1;
+    cursor: pointer;
+    left: 15px;
+    border-radius: 5px;
+    transition-duration: 250ms;
+    transition-property: border-color, background, color;
+    transition-timing-function: ease-in-out;
+    font-size: 11px;
+    float: right;
 
+}
+.uncheck-button:hover{
+    background-color: white;
+    color: #0BB2B1;
+    border: 1px solid #0BB2B1;
+}

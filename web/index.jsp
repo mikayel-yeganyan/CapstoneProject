@@ -8,7 +8,7 @@
   <title>Search Page</title>
   <link rel="stylesheet" href="././css/searchResults.css">
 
-</head>
+</head> 
 <body>
 
 <!-- Include Navigation Bar -->
@@ -16,8 +16,10 @@
 
 <!-- Search Bar -->
 <div class="search-container">
-  <input type="text" class="search-box" placeholder="Search...">
-  <button class="search-button">Search</button>
+  <form class="search-form" action="search-resources" method="GET">
+    <input type="text" class="search-box" placeholder="Search..." name="search-box">
+    <button type="submit" class="search-button">Search</button>
+  </form>
 </div>
 
 <!-- Main Content -->
