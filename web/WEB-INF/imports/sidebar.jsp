@@ -13,7 +13,7 @@
 <div class="sidebar">
 
     <c:choose>
-        <c:when test="${empty sessionScope.types} && ${empty sessionScope.domains} && ${empty sessionScope.targets} && ${empty sessionScope.languages}">
+        <c:when test="${empty sessionScope.types and empty sessionScope.domains and empty sessionScope.targets and empty sessionScope.languages}">
             <h3>No Filters Found!</h3>
         </c:when>
 
