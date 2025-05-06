@@ -1,39 +1,44 @@
 package am.aua.resourcehub.util;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
+import org.apache.commons.dbcp2.BasicDataSource;
 
 public class ConnectionFactory {
 
-    // static reference to itself
-    private static final ConnectionFactory instance = new ConnectionFactory();
+    private static ConnectionFactory instance;
+    private final BasicDataSource dataSource;
 
-    String url = "jdbc:mysql://localhost:3306/otters";
-    String user = "root";
-    String password = "admin123";
-    String driverClass = "com.mysql.jdbc.Driver";
+    private static final String url = "jdbc:mysql://localhost:3306/otters";
+    private static final String user = "root";
+    private static final String password = "admin123";
+    private static final String driverClass = "com.mysql.jdbc.Driver";
 
     // private constructor
     private ConnectionFactory()
     {
-        try {
-            Class.forName(driverClass);
-        }
-        catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+        dataSource = new BasicDataSource();
+        dataSource.setUrl(url);
+        dataSource.setUsername(user);
+        dataSource.setPassword(password);
+        dataSource.setMinIdle(5);
+        dataSource.setMaxIdle(10);
+        dataSource.setMaxOpenPreparedStatements(100);
+        dataSource.setDriverClassName(driverClass);
     }
 
-    public static ConnectionFactory getInstance()
+    public static synchronized ConnectionFactory getInstance()
     {
+        if(instance == null){
+            instance = new ConnectionFactory();
+        }
+
         return instance;
     }
 
-    public Connection getConnection() throws SQLException, ClassNotFoundException
+    public Connection getConnection() throws SQLException
     {
-        Connection connection = DriverManager.getConnection(url, user, password);
-        return connection;
+        return dataSource.getConnection();
     }
 
 }

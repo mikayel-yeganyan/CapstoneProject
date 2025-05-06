@@ -11,4 +11,6 @@ public interface ResourceDAO {
     List<Resource> getAllResources();
 
     List<Resource> searchResourcesByName(String search);
+
+    List<Resource> searchResourcesByKeyword(String keyword);
 }

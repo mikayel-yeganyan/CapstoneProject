@@ -9,7 +9,7 @@ public class Resource {
     private String developer;
     private String region;
     private String language;
-    private String keywords;
+    private List<String> keywords;
     private String url;
     private String description;
     private List<String> target;
@@ -17,7 +17,7 @@ public class Resource {
 
     public Resource() {}
 
-    public Resource(int id, String type, String title, String developer, List<String> target, String region, String language, String keywords, String url) {
+    public Resource(int id, String type, String title, String developer, List<String> target, String region, String language, List<String> keywords, String url) {
         this.id = id;
         this.type = type;
         this.title = title;
@@ -50,8 +50,8 @@ public class Resource {
     public String getLanguage() { return language; }
     public void setLanguage(String language) { this.language = language; }
 
-    public String getKeywords() { return keywords; }
-    public void setKeywords(String keywords) { this.keywords = keywords; }
+    public List<String> getKeywords() { return keywords; }
+    public void setKeywords(List<String> keywords) { this.keywords = keywords; }
 
     public String getUrl() { return url; }
     public void setUrl(String url) { this.url = url; }

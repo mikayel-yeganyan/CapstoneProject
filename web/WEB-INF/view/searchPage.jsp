@@ -10,7 +10,7 @@
     <title>Search Page</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/searchResults.css">
 
-
+    <c:set var="descriptionPlaceholder" value="This is a description placeholder only for testing purposes, unfortunetely the discription for this item wasn't found in the database. This text isn't inteded for the real app and will not appear there, as the new clean data will have all the descriptions added."/>
 </head>
 <body>
 
@@ -47,11 +47,14 @@
                                     <p>${resource.title}</p>
                                     <div class="result-meta">
                                         <p>
-                                                ${resource.developer}
-                                                ${(not empty resource.type) ? (' - '.concat(resource.type)) : ''}
-                                                ${(not empty resource.description) ? (' - '.concat(resource.description)) : (not empty resource.keywords ? ' - '.concat(resource.keywords) : '')}
-
+                                                ${(not empty resource.description) ? resource.description : descriptionPlaceholder}
                                         </p>
+                                    </div>
+                                    <!-- Tags -->
+                                    <div class="keyword-tags">
+                                        <c:forEach items="${resource.keywords}" var="keyword">
+                                            <span class="tag">${keyword}</span>
+                                        </c:forEach>
                                     </div>
                                 </div>
                                 <div class="result-actions">
