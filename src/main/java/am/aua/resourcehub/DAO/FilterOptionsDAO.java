@@ -12,9 +12,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class FilterOptionsDAO {
-    private Connection connection;
+//    private Connection connection;
 
-    public FilterOptionsDAO(Connection connection) {
+    /*public FilterOptionsDAO(Connection connection) {
         this.connection = connection;
     }
     public FilterOptionsDAO() {
@@ -23,7 +23,9 @@ public class FilterOptionsDAO {
         } catch (SQLException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
-    }
+    }*/
+
+    public FilterOptionsDAO() {}
 
     public List<String> getAllTypes() {
         return getSingleColumn("SELECT name FROM resource_types");
@@ -43,7 +45,8 @@ public class FilterOptionsDAO {
 
     private List<String> getSingleColumn(String query) {
         List<String> values = new ArrayList<>();
-        try (PreparedStatement stmt = connection.prepareStatement(query);
+        try (Connection connection = ConnectionFactory.getInstance().getConnection();
+             PreparedStatement stmt = connection.prepareStatement(query);
              ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
                 values.add(rs.getString(1));

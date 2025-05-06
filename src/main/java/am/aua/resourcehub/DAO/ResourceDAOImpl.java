@@ -1,6 +1,5 @@
 package am.aua.resourcehub.DAO;
 
-import am.aua.resourcehub.DAO.ResourceDAO;
 import am.aua.resourcehub.model.Resource;
 import am.aua.resourcehub.util.ConnectionFactory;
 
@@ -9,26 +8,16 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ResourceDAOImpl implements ResourceDAO {
-    private Connection connection;
 
-    public ResourceDAOImpl(Connection connection) {
-        this.connection = connection;
-    }
-    public ResourceDAOImpl(){
-        try {
-            this.connection = ConnectionFactory.getInstance().getConnection();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-    }
+    public ResourceDAOImpl() {}
 
-    private List<Resource> mapResources(ResultSet rs) throws SQLException {
+    private List<Resource> mapResources(ResultSet rs, Connection connection) throws SQLException {
         List<Resource> resources = new ArrayList<>();
 
         String targetQuery =    "SELECT * FROM resource_has_target AS rht " +
@@ -50,9 +39,11 @@ public class ResourceDAOImpl implements ResourceDAO {
             resource.setDeveloper(rs.getString("developer"));
             resource.setRegion(rs.getString("region"));
             resource.setLanguage(rs.getString("resource_language"));
-            resource.setKeywords(rs.getString("keywords"));
             resource.setUrl(rs.getString("link"));
             resource.setDescription(rs.getString("description"));
+            resource.setKeywords(Arrays.stream(rs.getString("keywords").split(","))
+                    .map(String::trim)
+                    .collect(Collectors.toList()));
 
             targetStmt.setInt(1, resource.getId());
             ResultSet targetRs = targetStmt.executeQuery();
@@ -85,13 +76,15 @@ public class ResourceDAOImpl implements ResourceDAO {
                         "LEFT JOIN resource_types AS t ON r.type = t.id " +
                         "WHERE r.id = ?";
 
-        Resource resource = null;
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+        try (Connection connection = ConnectionFactory.getInstance().getConnection();
+             PreparedStatement stmt = connection.prepareStatement(sql)) {
 
             stmt.setInt(1, id);
             ResultSet rs = stmt.executeQuery();
 
-            result = mapResources(rs);
+            result = mapResources(rs, connection);
+
+            rs.close();
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -111,10 +104,11 @@ public class ResourceDAOImpl implements ResourceDAO {
         String sql =    "SELECT * FROM resources AS r " +
                         "LEFT JOIN resource_types AS t ON r.type = t.id ";
 
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            ResultSet rs = stmt.executeQuery();
+        try (Connection connection = ConnectionFactory.getInstance().getConnection();
+             PreparedStatement stmt = connection.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
 
-            result = mapResources(rs);
+            result = mapResources(rs, connection);
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -131,16 +125,25 @@ public class ResourceDAOImpl implements ResourceDAO {
                         "LEFT JOIN resource_types AS t ON r.type = t.id " +
                         "WHERE r.title LIKE 1";
 
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+        try (Connection connection = ConnectionFactory.getInstance().getConnection();
+             PreparedStatement stmt = connection.prepareStatement(sql)) {
+
             stmt.setString(1, "'%" + search + "%'");
             ResultSet rs = stmt.executeQuery();
 
-            result = mapResources(rs);
+            result = mapResources(rs, connection);
 
+            rs.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
         return result;
+    }
+
+    @Override
+    public List<Resource> searchResourcesByKeyword(String keyword) {
+        //TODO
+        return Collections.emptyList();
     }
 }
