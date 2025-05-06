@@ -80,6 +80,7 @@ body {
     font-weight: bold;
     color: rgb(0, 100, 139);
     flex-grow: 1; /* Allows the title to take available space */
+    margin: 0;
 }
 
 .result-title p {
@@ -122,4 +123,50 @@ body {
     background-color: white;
     color: #0583F2;
     border: 2px solid #0583F2;
+}
+
+/* Keyword Tags - Google-style - Arevik */
+.keyword-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 8px;
+}
+
+.tag {
+    font-size: 0.85rem;
+    padding: 6px 16px;
+    background-color: #fff;
+    color: #6c757d; /* muted grey */
+    border: 1px solid #dadce0;
+    border-radius: 9999px;
+    white-space: nowrap;
+    font-family: Cairo, sans-serif;
+    font-weight: 500;
+    cursor: default;
+    text-align: center;
+    transition: background-color 0.2s ease;
+}
+
+.tag:hover {
+    background-color: #f1f3f4;
+}
+.result-card {
+    margin-bottom: 24px;
+    padding: 16px;
+    background-color: #fff;
+    border-radius: 8px;
+}
+.result-description {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #6c757d; /* muted grey */
+    flex: 1;
+    margin-top: 6px;
+}
+.description-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
 }
