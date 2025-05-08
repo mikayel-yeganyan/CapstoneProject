@@ -65,7 +65,100 @@ public class ResourceDAOImpl implements ResourceDAO {
             resources.add(resource);
         }
 
-        return resources;
+        return resources.stream().distinct().collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Resource> search(String query, List<String> types, List<String> targets, List<String> regions, List<String> domains, List<String> languages, int limit, int offset) {
+        List<Resource> result = null;
+
+        //check if all the arguments are null or empty
+        boolean noSearch =
+                (query == null || query.isEmpty()) &&
+                (types == null || types.isEmpty()) &&
+                (targets == null || targets.isEmpty()) &&
+                (regions == null || regions.isEmpty()) &&
+                (domains == null || domains.isEmpty()) &&
+                (languages == null || languages.isEmpty());
+
+        //in case nothing was queried
+        if(noSearch)
+            return getAllResources(limit, offset);
+
+        StringBuilder sql = new StringBuilder(
+                        "SELECT *, MATCH(title, developer, region, keywords, description) " +
+                        "   AGAINST (? IN NATURAL LANGUAGE MODE) AS score " +
+                        "FROM resources AS r LEFT JOIN resource_types AS t ON r.type = t.id " +
+                        "LEFT JOIN resource_has_domain AS rd ON r.id = rd.resource_id " +
+                        "LEFT JOIN domains AS d ON rd.domain_id = d.id " +
+                        "LEFT JOIN resource_has_target as rt ON r.id = rt.resource_id " +
+                        "LEFT JOIN target_audience as a ON rt.target_id = a.id " +
+                        "WHERE ( ? = '' OR MATCH (title, developer, region, keywords, description) " +
+                        "   AGAINST (? IN NATURAL LANGUAGE MODE))"
+        );
+
+        if(types != null && !types.isEmpty()) {
+            sql.append(" AND t.name IN (")
+            .append(types.stream().map(a -> "?").collect(Collectors.joining(","))).append(")");
+        }
+        if(domains != null && !domains.isEmpty()) {
+            sql.append(" AND d.name IN (")
+            .append(domains.stream().map(a -> "?").collect(Collectors.joining(","))).append(")");
+        }
+        if(targets != null && !targets.isEmpty()) {
+            sql.append(" AND a.name IN (")
+            .append(targets.stream().map(a -> "?").collect(Collectors.joining(","))).append(")");
+        }
+        if(languages != null && !languages.isEmpty()) {
+            sql.append(" AND r.resource_language IN (")
+            .append(languages.stream().map(a -> "?").collect(Collectors.joining(","))).append(")");
+        }
+
+        sql.append(" GROUP BY r.id");
+        sql.append(" ORDER BY score DESC LIMIT ? OFFSET ?");
+
+        try (Connection connection = ConnectionFactory.getInstance().getConnection();
+             PreparedStatement stmt = connection.prepareStatement(sql.toString())) {
+
+            int i = 1;
+            stmt.setString(i++, query);
+            stmt.setString(i++, query);
+            stmt.setString(i++, query);
+
+            if(types != null){
+                for (String type : types) {
+                    stmt.setString(i++, type);
+                }
+            }
+            if(domains != null){
+                for (String dom : domains) {
+                    stmt.setString(i++, dom);
+                }
+            }
+            if(targets != null){
+                for (String target : targets) {
+                    stmt.setString(i++, target);
+                }
+            }
+            if(languages != null){
+                for (String lang : languages) {
+                    stmt.setString(i++, lang);
+                }
+            }
+
+            stmt.setInt(i++, limit);
+            stmt.setInt(i, offset);
+
+            ResultSet rs = stmt.executeQuery();
+            result = mapResources(rs, connection);
+
+            rs.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return result;
     }
 
     @Override
@@ -98,18 +191,24 @@ public class ResourceDAOImpl implements ResourceDAO {
     }
 
     @Override
-    public List<Resource> getAllResources() {
+    public List<Resource> getAllResources(int limit, int offset) {
         List<Resource> result = new ArrayList<>();
 
         String sql =    "SELECT * FROM resources AS r " +
-                        "LEFT JOIN resource_types AS t ON r.type = t.id ";
+                        "LEFT JOIN resource_types AS t ON r.type = t.id " +
+                        "LIMIT ? OFFSET ?";
 
         try (Connection connection = ConnectionFactory.getInstance().getConnection();
-             PreparedStatement stmt = connection.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
+             PreparedStatement stmt = connection.prepareStatement(sql)
+             ) {
+            stmt.setInt(1, limit);
+            stmt.setInt(2, offset);
+
+            ResultSet rs = stmt.executeQuery();
 
             result = mapResources(rs, connection);
 
+            rs.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }

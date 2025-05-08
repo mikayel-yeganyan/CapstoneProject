@@ -20,7 +20,7 @@
 <!-- Search Bar -->
 <div class="search-container">
     <form id="searchForm" class="search-form" action="search-resources" method="GET">
-        <input type="text" class="search-box" placeholder="Search..." name="search-box">
+        <input type="text" class="search-box" value="${param.query}" placeholder="Search..." name="query">
         <button type="submit" class="search-button">Search</button>
     </form>
 </div>
