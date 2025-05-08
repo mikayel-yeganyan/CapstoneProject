@@ -30,8 +30,8 @@ body {
     padding: 10px 15px;
     /*background-color: rgb(5, 154, 229);*/
     background-color: #0BB2B1;
+    border: 2px solid #0BB2B1;
     color: white;
-    border: none;
     cursor: pointer;
     margin-left: 10px;
     border-radius: 5px;
@@ -43,7 +43,6 @@ body {
     background-color: white;
     color: #0BB2B1;
     border: 2px solid #0BB2B1;
-    margin-left: 6px;
 }
 
 /* Main Content */

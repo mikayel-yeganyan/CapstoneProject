@@ -21,7 +21,7 @@ public class Main {
 
 
         ResourceDAOImpl dao = new ResourceDAOImpl();
-        List<Resource> resources = dao.getAllResources();
+        List<Resource> resources = dao.search(null, null, null, null, null, null, 20, 0);
 
 
         for (Resource resource : resources) {

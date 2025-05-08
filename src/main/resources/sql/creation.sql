@@ -19,10 +19,12 @@ CREATE TABLE resources(
     title VARCHAR(255),
     type INT,
     developer VARCHAR(255),
+    description VARCHAR(1500),
     region VARCHAR(255),
     resource_language VARCHAR(255),
     keywords VARCHAR(255),
     link VARCHAR(255),
+    FULLTEXT(title, description, developer, region, keywords),
     FOREIGN KEY(type) REFERENCES resource_types(id)
 );
 

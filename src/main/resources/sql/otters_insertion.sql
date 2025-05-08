@@ -94,3 +94,32 @@ LEFT JOIN resource_has_target as res_tar ON r.id = res_tar.resource_id
 LEFT JOIN target_audience as a ON res_tar.target_id = a.id
 LEFT JOIN resource_has_domain as rd ON r.id = rd.resource_id
 LEFT JOIN domains as d ON rd.domain_id = d.id;
+
+SELECT * FROM resources JOIN resource_types ON resources.type = resource_types.id;
+
+SELECT r.*, d.name as domain, t.name as type, a.name, MATCH(title, developer, description, region, keywords)
+	AGAINST ('litter' IN NATURAL LANGUAGE MODE) AS score
+FROM resources as r LEFT JOIN resource_types as t ON r.type = t.id 
+LEFT JOIN resource_has_domain as rd ON r.id = rd.resource_id 
+LEFT JOIN domains as d ON rd.domain_id = d.id
+LEFT JOIN resource_has_target as rt ON r.id = rt.resource_id
+LEFT JOIN target_audience as a ON rt.target_id = a.id
+WHERE MATCH(title, description, developer, region, keywords) 
+	AGAINST ('litter' IN NATURAL LANGUAGE MODE);
+-- AND d.name in ('freshwater') 
+-- AND t.name IN ('toolkit', 'workshop') 
+-- AND a.name in ('teachers', 'researchers', 'somethingElse')
+-- GROUP BY r.id
+-- ORDER BY score DESC LIMIT 20 OFFSET 0;
+SELECT r.*, MATCH(title, developer, region, keywords, description)
+		AGAINST ('' IN NATURAL LANGUAGE MODE) AS score 
+    FROM resources AS r LEFT JOIN resource_types AS t ON r.type = t.id
+    LEFT JOIN resource_has_domain AS rd ON r.id = rd.resource_id 
+    LEFT JOIN domains AS d ON rd.domain_id = d.id 
+    LEFT JOIN resource_has_target as rt ON r.id = rt.resource_id
+    LEFT JOIN target_audience as a ON rt.target_id = a.id 
+    WHERE ('' = '' OR MATCH (title, developer, region, keywords, description)    
+		AGAINST ('science' IN NATURAL LANGUAGE MODE)) 
+	AND (t.name = 'report')
+	GROUP BY r.id 
+    ORDER BY score DESC LIMIT 20 OFFSET 0;

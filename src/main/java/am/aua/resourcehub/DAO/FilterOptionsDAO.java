@@ -43,6 +43,8 @@ public class FilterOptionsDAO {
         return getSingleColumn("SELECT resource_language FROM resources");
     }
 
+    public List<String> getAllRegions() { return getSingleColumn("SELECT region FROM resources"); }
+
     private List<String> getSingleColumn(String query) {
         List<String> values = new ArrayList<>();
         try (Connection connection = ConnectionFactory.getInstance().getConnection();
