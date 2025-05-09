@@ -4,6 +4,8 @@
     <option name="state">
       <map>
         <entry key="file://$PROJECT_DIR$/web/WEB-INF/imports/footer.html" value="file://$PROJECT_DIR$/web/WEB-INF/imports" />
+        <entry key="file://$PROJECT_DIR$/web/admin/login.jsp" value="file://$PROJECT_DIR$/web/admin" />
+        <entry key="file://$PROJECT_DIR$/web/admin/loginCheck.jsp" value="file://$PROJECT_DIR$/web/admin" />
         <entry key="file://$PROJECT_DIR$/web/index.jsp" value="file://$PROJECT_DIR$/web" />
       </map>
     </option>
