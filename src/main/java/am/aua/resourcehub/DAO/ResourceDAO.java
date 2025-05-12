@@ -21,4 +21,6 @@ public interface ResourceDAO {
                           List<String> domains, //can be null
                           List<String> languages, //can be null
                           int limit, int offset);
+
+
 }

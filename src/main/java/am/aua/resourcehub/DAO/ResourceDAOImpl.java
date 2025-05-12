@@ -312,4 +312,17 @@ public class ResourceDAOImpl implements ResourceDAO {
         //TODO
         return Collections.emptyList();
     }
+    public void updateResource(Resource resource) {
+        String sql = "UPDATE resources SET title = ?, description = ? WHERE id = ?";
+        try (Connection conn = ConnectionFactory.getInstance().getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, resource.getTitle());
+            stmt.setString(2, resource.getDescription());
+            stmt.setInt(3, resource.getId());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }
