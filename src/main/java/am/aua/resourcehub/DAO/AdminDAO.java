@@ -8,19 +8,19 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class AdminDAO {
-    public boolean authenticate(String username, String password) {
-        String sql = "select * from admin_user where username = ? and password = ?";
+    public boolean validate(String username, String pass) {
+        String sql = "SELECT * FROM admin_user WHERE username = ? AND password = ?";
         try(Connection conn = ConnectionFactory.getInstance().getConnection();
-            PreparedStatement statement = conn.prepareStatement(sql)) {
-
-            statement.setString(1, username);
-            statement.setString(2, password);
-            ResultSet rs = statement.executeQuery();
-
-            return rs.next();
-        } catch (SQLException e){
+            PreparedStatement statement = conn.prepareStatement(sql);
+        ){
+          statement.setString(1, username);
+          statement.setString(2, pass);
+          ResultSet rs = statement.executeQuery();
+          return rs.next();
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return false;
     }
 }
+
