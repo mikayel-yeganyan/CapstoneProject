@@ -11,6 +11,12 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/searchResults.css">
 
     <c:set var="descriptionPlaceholder" value="This is a description placeholder only for testing purposes, unfortunetely the discription for this item wasn't found in the database. This text isn't inteded for the real app and will not appear there, as the new clean data will have all the descriptions added."/>
+
+    <script>
+        function clearAndSubmit() {
+            window.location.href = 'search-resources';
+        }
+    </script>
 </head>
 <body>
 
@@ -22,6 +28,7 @@
     <form id="searchForm" class="search-form" action="search-resources" method="GET">
         <input type="text" class="search-box" value="${param.query}" placeholder="Search..." name="query">
         <button type="submit" class="search-button">Search</button>
+        <button type="button" class="search-button" onclick="clearAndSubmit()" >Show All</button>
     </form>
 </div>
 

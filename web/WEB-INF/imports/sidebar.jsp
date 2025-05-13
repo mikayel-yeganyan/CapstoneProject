@@ -6,8 +6,17 @@
 <script>
     function uncheckAllFilters() {
         const checkboxes = document.querySelectorAll('.filter-option input[type="checkbox"]');
-        checkboxes.forEach(cb => cb.checked = false);
+        checkboxes.forEach(cb => {cb.checked = false; cb.dispatchEvent(new Event('change'));});
     }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const checkboxes = document.querySelectorAll('.filter-option input[type="checkbox"]');
+        checkboxes.forEach(function (checkbox) {
+            checkbox.addEventListener('change', function () {
+                document.getElementById('searchForm').submit();
+            });
+        });
+    });
 </script>
 
 <div class="sidebar">
