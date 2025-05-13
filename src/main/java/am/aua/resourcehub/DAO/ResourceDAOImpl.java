@@ -118,22 +118,42 @@ public class ResourceDAOImpl implements ResourceDAO {
                         "LEFT JOIN resource_has_target as rt ON r.id = rt.resource_id " +
                         "LEFT JOIN target_audience as a ON rt.target_id = a.id " +
                         "WHERE ( ? = '' OR MATCH (title, developer, region, keywords, description) " +
-                        "   AGAINST (? IN NATURAL LANGUAGE MODE))"
+                        "   AGAINST (? IN NATURAL LANGUAGE MODE)"
         );
 
-        if(types != null && !types.isEmpty()) {
+        for (String t : tokenizedQuery) {
+            if(t.length() >= 3) {
+                sql.append(" OR r.title LIKE '%")
+                        .append(t)
+                        .append("%'");
+                sql.append(" OR r.developer LIKE '%")
+                        .append(t)
+                        .append("%'");
+                sql.append(" OR r.region LIKE '%")
+                        .append(t)
+                        .append("%'");
+                sql.append(" OR r.keywords LIKE '%")
+                        .append(t)
+                        .append("%'");
+                sql.append(" OR r.description LIKE '%")
+                        .append(t)
+                        .append("%'");
+            }
+        }
+        sql.append(")");
+        if (types != null && !types.isEmpty()) {
             sql.append(" AND t.name IN (")
             .append(types.stream().map(a -> "?").collect(Collectors.joining(","))).append(")");
         }
-        if(domains != null && !domains.isEmpty()) {
+        if (domains != null && !domains.isEmpty()) {
             sql.append(" AND d.name IN (")
             .append(domains.stream().map(a -> "?").collect(Collectors.joining(","))).append(")");
         }
-        if(targets != null && !targets.isEmpty()) {
+        if (targets != null && !targets.isEmpty()) {
             sql.append(" AND a.name IN (")
             .append(targets.stream().map(a -> "?").collect(Collectors.joining(","))).append(")");
         }
-        if(languages != null && !languages.isEmpty()) {
+        if (languages != null && !languages.isEmpty()) {
             sql.append(" AND r.resource_language IN (")
             .append(languages.stream().map(a -> "?").collect(Collectors.joining(","))).append(")");
         }

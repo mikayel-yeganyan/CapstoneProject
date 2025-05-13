@@ -1,11 +1,9 @@
-@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400&display=swap');
-
 .site-footer {
     width: 100%;
     padding: 40px 0 0;
     background: linear-gradient(to right, #1bb5be, #317bcb);
     color: white;
-    font-family: Cairo;
+    font-family: 'Cairo', sans-serif;
     flex-shrink: 0;
 }
 
@@ -19,23 +17,69 @@
     gap: 0 20px;
 }
 
-.footer-left img,
-.footer-center img{
-    height: 60px;
+.footer-left img {
+    height: 50px;
     margin-bottom: 15px;
 }
-.footer-right{
-    margin-bottom: 15px;
-}
+
 .footer-left,
-.footer-right,
-.footer-center{
+.footer-right {
     flex: 1;
     min-width: 300px;
 }
 
 .footer-left p {
     line-height: 1.6;
+    font-size: 14px;
+}
+
+.footer-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.footer-form input,
+.footer-form textarea {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid white;
+    margin-bottom: 10px;
+    padding: 8px;
+    color: white;
+    font-family: inherit;
+}
+
+.footer-form label {
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+.footer-form textarea {
+    resize: none;
+}
+
+.footer-form button {
+    margin-top: 10px;
+    padding: 10px;
+    border: none;
+    background-color: #0d4688;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    width: fit-content;
+}
+
+.newsletter {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.newsletter input {
+    margin-right: 10px;
+}
+
+.newsletter label {
     font-size: 14px;
 }
 
@@ -59,8 +103,8 @@
 .footer-bottom-content {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 10px 10px; /* adjust this value to align with the bottom of the flag */
-    font-size: 16px;
+    padding: 30px 40px; /* adjust this value to align with the bottom of the flag */
+    font-size: 14px;
     text-align: left;
 }
 
@@ -71,9 +115,8 @@
 
 .footer-bottom-content a {
     color: white;
-    text-decoration: none;
-    gap: 6px;
-
+    text-decoration: underline;
+    margin-right: 10px;
 }
 
 /* Make page fill entire viewport */
@@ -94,11 +137,10 @@ html, body {
 .main-content {
     flex: 1;
 }
-.footer-left,
-.footer-center{
+.footer-left {
     display: flex;
     align-items: center;
-    gap: 20px; /* Space between logos */
+    gap: 16px; /* Space between logos */
 }
 
 
