@@ -16,6 +16,13 @@
         function clearAndSubmit() {
             window.location.href = 'search-resources';
         }
+
+        function tagClicked(e) {
+            form = document.getElementById("searchForm");
+            form.reset();
+            document.getElementById("searchBox").value = e.textContent;
+            form.submit();
+        }
     </script>
 </head>
 <body>
@@ -26,7 +33,7 @@
 <!-- Search Bar -->
 <div class="search-container">
     <form id="searchForm" class="search-form" action="search-resources" method="GET">
-        <input type="text" class="search-box" value="${param.query}" placeholder="Search..." name="query">
+        <input id="searchBox" type="text" class="search-box" value="${param.query}" placeholder="Search..." name="query">
         <button type="submit" class="search-button">Search</button>
         <button type="button" class="search-button" onclick="clearAndSubmit()" >Show All</button>
     </form>
@@ -60,7 +67,7 @@
                                     <!-- Tags -->
                                     <div class="keyword-tags">
                                         <c:forEach items="${resource.keywords}" var="keyword">
-                                            <span class="tag">${keyword}</span>
+                                            <span class="tag" onclick="tagClicked(this)">${keyword}</span>
                                         </c:forEach>
                                     </div>
                                 </div>
