@@ -2,6 +2,7 @@ package am.aua.resourcehub.DAO;
 
 import am.aua.resourcehub.model.Resource;
 import am.aua.resourcehub.util.ConnectionFactory;
+import am.aua.resourcehub.util.SynonymProvider;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,8 +11,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ResourceDAOImpl implements ResourceDAO {
 
@@ -71,6 +75,10 @@ public class ResourceDAOImpl implements ResourceDAO {
     @Override
     public List<Resource> search(String query, List<String> types, List<String> targets, List<String> regions, List<String> domains, List<String> languages, int limit, int offset) {
         List<Resource> result = null;
+        SynonymProvider synonymProvider = null;
+        Set<String> searchTerms = new HashSet<>();
+        List<String> tokenizedQuery = preprocessQuery(query);
+        String expandedQuery = "";
 
         //check if all the arguments are null or empty
         boolean noSearch =
@@ -84,6 +92,22 @@ public class ResourceDAOImpl implements ResourceDAO {
         //in case nothing was queried
         if(noSearch)
             return getAllResources(limit, offset);
+
+        try {
+            synonymProvider = new SynonymProvider();
+
+            for (String t : tokenizedQuery) {
+                searchTerms.addAll(synonymProvider.getSynonyms(t));
+            }
+        }
+        catch (Exception e) {
+            System.out.println("Synonym provider failed");
+            System.out.println(e.getMessage());
+        }
+
+        if(!searchTerms.isEmpty())
+            expandedQuery = String.join(" ", searchTerms);
+
 
         StringBuilder sql = new StringBuilder(
                         "SELECT *, MATCH(title, developer, region, keywords, description) " +
@@ -121,9 +145,9 @@ public class ResourceDAOImpl implements ResourceDAO {
              PreparedStatement stmt = connection.prepareStatement(sql.toString())) {
 
             int i = 1;
-            stmt.setString(i++, query);
-            stmt.setString(i++, query);
-            stmt.setString(i++, query);
+            stmt.setString(i++, expandedQuery);
+            stmt.setString(i++, expandedQuery);
+            stmt.setString(i++, expandedQuery);
 
             if(types != null){
                 for (String type : types) {
@@ -155,9 +179,30 @@ public class ResourceDAOImpl implements ResourceDAO {
             rs.close();
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("Database Error Occurred");
+            System.out.println(e.getMessage());
         }
 
+        return result;
+    }
+
+    private static List<String> preprocessQuery(String raw) {
+        if (raw == null || raw.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        String clean = raw.toLowerCase().replaceAll("[^a-z0-9]+", " ").trim();
+
+        String[] tokens = clean.split("\\s+");
+
+        Set<String> stopWords = Stream.of("the", "of", "and", "a", "in", "to", "for", "on", "with", "are", "is", "am", "was", "were").collect(Collectors.toSet());
+        List<String> result = new ArrayList<>();
+
+        for (String token : tokens) {
+            if (!stopWords.contains(token)) {
+                result.add(token);
+            }
+        }
         return result;
     }
 
@@ -210,7 +255,8 @@ public class ResourceDAOImpl implements ResourceDAO {
 
             rs.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("Database Error Occurred");
+            System.out.println(e.getMessage());
         }
 
         return result;
@@ -234,7 +280,8 @@ public class ResourceDAOImpl implements ResourceDAO {
 
             rs.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("Database Error Occurred");
+            System.out.println(e.getMessage());
         }
 
         return result;
