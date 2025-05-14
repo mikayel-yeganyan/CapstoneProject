@@ -10,7 +10,7 @@
 <%@ page import="am.aua.resourcehub.model.Resource" %>
 <%
     int id = Integer.parseInt(request.getParameter("id"));
-    Resource resource = new ResourceDAO().getResourceById(id);
+    Resource resource = new ResourceDAOImpl().getResourceById(id);
 %>
 <html>
 <head><title>Edit Resource</title></head>
