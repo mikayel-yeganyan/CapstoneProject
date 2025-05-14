@@ -11,7 +11,7 @@ public class ConnectionFactory {
 
     private static final String url = "jdbc:mysql://localhost:3306/otters";
     private static final String user = "root";
-    private static final String password = "admin123";
+    private static final String password = "Arevik2001";
     private static final String driverClass = "com.mysql.cj.jdbc.Driver";
 
     // private constructor

@@ -9,7 +9,7 @@ import java.sql.SQLException;
 
 public class AdminDAO {
     public boolean authenticate(String username, String password) {
-        String sql = "select * from admin_user where username = ? and password = ?";
+        String sql = "select * from admin_user where username = ? and pass = ?";
         try(Connection conn = ConnectionFactory.getInstance().getConnection();
             PreparedStatement statement = conn.prepareStatement(sql)) {
 

@@ -80,6 +80,8 @@ INSERT INTO domains (name) VALUES
 	('freshwater'),
     ('marine');
 
+INSERT INTO admin_user(username, pass) VALUES
+    ("admin", "admin123");
 
 CALL AssignResourceTypes;
 CALL AssignResourceDomains;
@@ -123,3 +125,5 @@ SELECT r.*, MATCH(title, developer, region, keywords, description)
 	AND (t.name = 'report')
 	GROUP BY r.id 
     ORDER BY score DESC LIMIT 20 OFFSET 0;
+
+

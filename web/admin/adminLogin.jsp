@@ -12,7 +12,7 @@
 </head>
 <body>
   <h2>Admin Login</h2>
-  <form action="${pageContext.request.contextPath}/admin/adminLogin" method="post">
+  <form action="${pageContext.request.contextPath}/admin-login" method="post">
   Username: <input type="text" name="username" required/><br/>
     Password: <input type="password" name="password" required/><br/>
     <input type="submit" value="Login" />

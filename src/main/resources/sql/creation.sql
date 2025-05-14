@@ -67,6 +67,12 @@ CREATE TABLE resource_has_domain(
     FOREIGN KEY(domain_id) REFERENCES domains(id)
 );
 
+CREATE TABLE admin_user(
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    pass VARCHAR(255) NOT NULL
+);
+
 -- LOAD DATA INFILE 'C:\\ProgramData\\\MySQL\\\MySQL Server 8.0\\Uploads\\initialResourceSheet.csv' -- Change the path to the output of the query at line 25 (SHOW VARIABLES LIKE "secure_file_priv";)
 --    INTO TABLE resources 
 --    FIELDS TERMINATED BY ',' 
