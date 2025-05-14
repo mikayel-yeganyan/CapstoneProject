@@ -21,7 +21,7 @@ public class ResourceDAOImpl implements ResourceDAO {
 
     public ResourceDAOImpl() {}
 
-    private List<Resource> mapResources(ResultSet rs, Connection connection) throws SQLException {
+    private Set<Resource> mapResources(ResultSet rs, Connection connection) throws SQLException {
         List<Resource> resources = new ArrayList<>();
 
         String targetQuery =    "SELECT * FROM resource_has_target AS rht " +
@@ -69,12 +69,12 @@ public class ResourceDAOImpl implements ResourceDAO {
             resources.add(resource);
         }
 
-        return resources.stream().distinct().collect(Collectors.toList());
+        return new HashSet<>(resources);
     }
 
     @Override
     public List<Resource> search(String query, List<String> types, List<String> targets, List<String> regions, List<String> domains, List<String> languages, int limit, int offset) {
-        List<Resource> result = null;
+        Set<Resource> result = null;
         SynonymProvider synonymProvider = null;
         Set<String> searchTerms = new HashSet<>();
         List<String> tokenizedQuery = preprocessQuery(query);
@@ -123,21 +123,11 @@ public class ResourceDAOImpl implements ResourceDAO {
 
         for (String t : tokenizedQuery) {
             if(t.length() >= 3) {
-                sql.append(" OR r.title LIKE '%")
-                        .append(t)
-                        .append("%'");
-                sql.append(" OR r.developer LIKE '%")
-                        .append(t)
-                        .append("%'");
-                sql.append(" OR r.region LIKE '%")
-                        .append(t)
-                        .append("%'");
-                sql.append(" OR r.keywords LIKE '%")
-                        .append(t)
-                        .append("%'");
-                sql.append(" OR r.description LIKE '%")
-                        .append(t)
-                        .append("%'");
+                sql.append(" OR r.title LIKE '%?%'");
+                sql.append(" OR r.developer LIKE '%?%'");
+                sql.append(" OR r.region LIKE '%?%'");
+                sql.append(" OR r.keywords LIKE '%?%");
+                sql.append(" OR r.description LIKE '%?%'");
             }
         }
         sql.append(")");
@@ -169,6 +159,16 @@ public class ResourceDAOImpl implements ResourceDAO {
             stmt.setString(i++, expandedQuery);
             stmt.setString(i++, expandedQuery);
 
+            for (String t : tokenizedQuery) {
+                if (t.length() >= 3) {
+                   stmt.setString(i++, t);
+                   stmt.setString(i++, t);
+                   stmt.setString(i++, t);
+                   stmt.setString(i++, t);
+                   stmt.setString(i++, t);
+                }
+            }
+
             if(types != null){
                 for (String type : types) {
                     stmt.setString(i++, type);
@@ -196,6 +196,10 @@ public class ResourceDAOImpl implements ResourceDAO {
             ResultSet rs = stmt.executeQuery();
             result = mapResources(rs, connection);
 
+            if (result.size() <= 3){
+//                result.addAll()
+            }
+
             rs.close();
 
         } catch (SQLException e) {
@@ -203,7 +207,7 @@ public class ResourceDAOImpl implements ResourceDAO {
             System.out.println(e.getMessage());
         }
 
-        return result;
+        return new ArrayList<Resource>(result);
     }
 
     private static List<String> preprocessQuery(String raw) {
@@ -240,7 +244,7 @@ public class ResourceDAOImpl implements ResourceDAO {
             stmt.setInt(1, id);
             ResultSet rs = stmt.executeQuery();
 
-            result = mapResources(rs, connection);
+            result = new ArrayList<Resource>(mapResources(rs, connection));
 
             rs.close();
 
@@ -271,7 +275,7 @@ public class ResourceDAOImpl implements ResourceDAO {
 
             ResultSet rs = stmt.executeQuery();
 
-            result = mapResources(rs, connection);
+            result = new ArrayList<>(mapResources(rs, connection));
 
             rs.close();
         } catch (SQLException e) {
@@ -296,7 +300,7 @@ public class ResourceDAOImpl implements ResourceDAO {
             stmt.setString(1, "'%" + search + "%'");
             ResultSet rs = stmt.executeQuery();
 
-            result = mapResources(rs, connection);
+            result = new ArrayList<>(mapResources(rs, connection));
 
             rs.close();
         } catch (SQLException e) {
