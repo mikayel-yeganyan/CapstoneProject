@@ -23,7 +23,7 @@ public class AdminLoginServlet extends HttpServlet {
             resp.sendRedirect("admin/adminDashboard.jsp");
         } else {
             req.setAttribute("errorMessage", "Invalid username or password");
-            req.getRequestDispatcher("adminLogin.jsp").forward(req, resp);
+            req.getRequestDispatcher("admin/adminLogin.jsp").forward(req, resp);
         }
     }
 
