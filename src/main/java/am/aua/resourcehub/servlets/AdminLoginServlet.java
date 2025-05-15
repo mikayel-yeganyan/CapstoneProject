@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-@WebServlet(name = "Admin", value = "/admin-login" )
+@WebServlet(name = "Admin", value = "/admin-login")
 public class AdminLoginServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String username = req.getParameter("username");
@@ -26,5 +26,6 @@ public class AdminLoginServlet extends HttpServlet {
             req.getRequestDispatcher("admin/adminLogin.jsp").forward(req, resp);
         }
     }
-
 }
+
+
