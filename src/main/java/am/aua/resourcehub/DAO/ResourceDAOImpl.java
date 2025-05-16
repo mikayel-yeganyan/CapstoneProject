@@ -312,4 +312,75 @@ public class ResourceDAOImpl implements ResourceDAO {
         //TODO
         return Collections.emptyList();
     }
+
+    public void insertResources(List<Resource> resources) {
+        if (resources == null || resources.isEmpty()) {
+            System.out.println("Nothing to add");
+            return;
+        }
+        StringBuilder sql1 = new StringBuilder("INSERT INTO resources (title, type, developer, description, region, resource_language, keywords, link) VALUES ");
+        StringBuilder sql2 = new StringBuilder("INSERT INTO resource_has_target (resource_id, target_id) VALUES ");
+        StringBuilder sql3 = new StringBuilder("INSERT INTO resource_has_domain (resource_id, domain_id) VALUES ");
+
+        try(Connection connection = ConnectionFactory.getInstance().getConnection()) {
+
+            for (int i=0; i < resources.size(); i++) {
+                sql1.append("(?, (SELECT id FROM resource_types WHERE name = ?), ?, ?, ?, ?, ?, ?)");
+
+                for (int j=0; j < resources.get(i).getTarget().size(); j++) {
+                    sql2.append("((SELECT id FROM resources WHERE link = ?), (SELECT id FROM target_audience WHERE name = ?))");
+                    if (j != resources.get(i).getTarget().size() - 1)
+                        sql2.append(", ");
+                }
+                for (int j=0; j < resources.get(i).getDomain().size(); j++) {
+                    sql3.append("((SELECT id FROM resources WHERE link = ?), (SELECT id FROM domains WHERE name = ?))");
+                    if (j != resources.get(i).getDomain().size() - 1)
+                        sql3.append(", ");
+                }
+
+                if (i != resources.size() - 1) {
+                    sql1.append(", ");
+                    sql2.append(", ");
+                    sql3.append(", ");
+                }
+            }
+
+            PreparedStatement resourceStmt = connection.prepareStatement(sql1.toString());
+            PreparedStatement targetStmt = connection.prepareStatement(sql2.toString());
+            PreparedStatement domainStmt = connection.prepareStatement(sql3.toString());
+
+
+            int i = 1;
+            int j = 1;
+            int k = 1;
+            for (Resource r : resources) {
+                resourceStmt.setString(i++, r.getTitle());
+                resourceStmt.setString(i++, r.getType());
+                resourceStmt.setString(i++, r.getDeveloper());
+                resourceStmt.setString(i++, r.getDescription());
+                resourceStmt.setString(i++, r.getRegion());
+                resourceStmt.setString(i++, r.getLanguage());
+                resourceStmt.setString(i++, String.join(", ", r.getKeywords()));
+                resourceStmt.setString(i++, r.getUrl());
+
+                for (String t : r.getTarget()) {
+                    targetStmt.setString(j++, r.getUrl());
+                    targetStmt.setString(j++, t);
+                }
+                for (String d : r.getDomain()) {
+                    domainStmt.setString(k++, r.getUrl());
+                    domainStmt.setString(k++, d);
+                }
+
+
+            }
+            resourceStmt.executeUpdate();
+            targetStmt.executeUpdate();
+            domainStmt.executeUpdate();
+
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
