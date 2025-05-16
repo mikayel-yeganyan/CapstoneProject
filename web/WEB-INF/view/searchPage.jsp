@@ -72,7 +72,7 @@
                                     </div>
                                 </div>
                                 <div class="result-actions">
-                                    <button  onclick="location.href='${resource.url}'">Link</button>
+                                    <button  onclick="window.open('${resource.url}', '_blank')" >Link</button>
                                 </div>
                             </div>
                         </li>

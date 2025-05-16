@@ -9,8 +9,10 @@ import com.google.api.services.sheets.v4.SheetsScopes;
 import com.google.auth.http.HttpCredentialsAdapter;
 import com.google.auth.oauth2.GoogleCredentials;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.security.GeneralSecurityException;
 import java.util.Collections;
 import java.util.List;
 
@@ -28,7 +30,7 @@ public class SheetsServiceProvider {
 
 
 
-    public static Sheets getSheetsService() throws Exception {
+    public static Sheets getSheetsService() throws GeneralSecurityException, IOException {
         GoogleCredentials credentials = GoogleCredentials.fromStream(Files.newInputStream(Paths.get(CREDENTIALS_FILE_PATH)))
                 .createScoped(Collections.singleton(SheetsScopes.SPREADSHEETS_READONLY));
 

@@ -314,6 +314,10 @@ public class ResourceDAOImpl implements ResourceDAO {
     }
 
     public void insertResources(List<Resource> resources) {
+        if (resources == null || resources.isEmpty()) {
+            System.out.println("Nothing to add");
+            return;
+        }
         StringBuilder sql1 = new StringBuilder("INSERT INTO resources (title, type, developer, description, region, resource_language, keywords, link) VALUES ");
         StringBuilder sql2 = new StringBuilder("INSERT INTO resource_has_target (resource_id, target_id) VALUES ");
         StringBuilder sql3 = new StringBuilder("INSERT INTO resource_has_domain (resource_id, domain_id) VALUES ");
