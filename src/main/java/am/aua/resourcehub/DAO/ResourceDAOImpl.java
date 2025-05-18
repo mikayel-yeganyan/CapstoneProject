@@ -23,6 +23,29 @@ public class ResourceDAOImpl implements ResourceDAO {
 
     public ResourceDAOImpl() {}
 
+    public void updateResource(Resource resource) {
+        String sql = "UPDATE resources SET title = ?, description = ? WHERE id = ?";
+        String targetJoined = String.join(",", resource.getTarget());
+        String keywordsJoined = String.join(",", resource.getKeywords());
+
+        try (Connection conn = ConnectionFactory.getInstance().getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, resource.getId());
+            stmt.setString(2, resource.getType());
+            stmt.setString(3, resource.getTitle());
+            stmt.setString(4,targetJoined);
+            stmt.setString(5, resource.getDeveloper());
+            stmt.setString(6, resource.getRegion());
+            stmt.setString(7, resource.getLanguage());
+            stmt.setString(8, keywordsJoined);
+            stmt.setString(9, resource.getUrl());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     private List<Resource> mapResources(ResultSet rs, Connection connection) throws SQLException {
         List<Resource> resources = new ArrayList<>();
 
@@ -215,6 +238,7 @@ public class ResourceDAOImpl implements ResourceDAO {
             count.close();
 
             result = mapResources(rs, connection);
+
             rs.close();
 
 
@@ -355,30 +379,5 @@ public class ResourceDAOImpl implements ResourceDAO {
     public int getFoundResourceCount() {
         return foundResourceCount;
     }
-    public void updateResource(Resource resource) {
-        String sql = "UPDATE resources SET title = ?, description = ? WHERE id = ?";
-        try (Connection conn = ConnectionFactory.getInstance().getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setString(1, resource.getTitle());
-            stmt.setString(2, resource.getDescription());
-            stmt.setInt(3, resource.getId());
-            stmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-    public void updateResource(Resource resource) {
-        String sql = "UPDATE resources SET title = ?, description = ? WHERE id = ?";
-        try (Connection conn = ConnectionFactory.getInstance().getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            stmt.setString(1, resource.getTitle());
-            stmt.setString(2, resource.getDescription());
-            stmt.setInt(3, resource.getId());
-            stmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
 }
