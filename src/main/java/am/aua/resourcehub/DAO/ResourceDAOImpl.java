@@ -8,12 +8,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -45,6 +40,35 @@ public class ResourceDAOImpl implements ResourceDAO {
             e.printStackTrace();
         }
     }
+
+    public List<String> getAllKeywords() {
+        Set<String> uniqueKeywords = new LinkedHashSet<>();
+        String sql = "SELECT keywords FROM resources"; // No DISTINCT needed
+
+        try (Connection conn = ConnectionFactory.getInstance().getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                String keywordStr = rs.getString("keywords");
+                if (keywordStr != null) {
+                    String[] keywords = keywordStr.split(",");
+                    for (String k : keywords) {
+                        String trimmed = k.trim();
+                        if (!trimmed.isEmpty()) {
+                            uniqueKeywords.add(trimmed);
+                        }
+                    }
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return new ArrayList<>(uniqueKeywords);
+    }
+
 
     private List<Resource> mapResources(ResultSet rs, Connection connection) throws SQLException {
         List<Resource> resources = new ArrayList<>();
