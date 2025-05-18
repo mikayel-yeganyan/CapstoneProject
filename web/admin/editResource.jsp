@@ -8,13 +8,31 @@
 <%@ page import="am.aua.resourcehub.DAO.ResourceDAOImpl"%>
 <%@ page import="am.aua.resourcehub.model.Resource" %>
 <%@ page import="java.util.List" %>
-<%@ page import="java.util.Arrays" %>
+<%@ page import="java.util.ArrayList" %>
 <%
     int id = Integer.parseInt(request.getParameter("id"));
     ResourceDAOImpl dao = new ResourceDAOImpl();
     Resource resource = dao.getResourceById(id);
 
-    List<String> allKeywords = dao.getAllKeywords();
+    /*List<String> allKeywords = dao.getAllKeywords();
+    String keywordStr = resource.getKeywords().toString();
+    if (keywordStr != null) {
+        for (String k : keywordStr.split(",")) {
+            allKeywords.add(k.trim());
+        }
+    }
+
+     */
+    List<String> allKeywords = new ArrayList<>();
+    String keywordStr = resource.getKeywords().toString();
+    if (keywordStr != null) {
+        if (resource.getKeywords() != null) {
+            for (String k : keywordStr.split(",")) {
+                allKeywords.add(k.trim());
+            }
+        }
+    }
+
 %>
 
 <!DOCTYPE html>
@@ -38,11 +56,9 @@
     Keywords:<br/>
     <select name="keywords" multiple>
         <% for (String kw : allKeywords) { %>
-        <option value="<%= kw %>" <%= resource.getKeywords().contains(kw) ? "selected" : "" %>>
-            <%= kw %>
-        </option>
+        <option value="<%= kw %>" selected><%= kw %></option>
         <% } %>
-    </select><br/><br/>
+    </select>
 
     <input type="submit" value="Update" />
 </form>
