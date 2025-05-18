@@ -19,6 +19,8 @@ import java.util.stream.Stream;
 
 public class ResourceDAOImpl implements ResourceDAO {
 
+    int foundResourceCount;
+
     public ResourceDAOImpl() {}
 
     private List<Resource> mapResources(ResultSet rs, Connection connection) throws SQLException {
@@ -110,7 +112,7 @@ public class ResourceDAOImpl implements ResourceDAO {
 
 
         StringBuilder sql = new StringBuilder(
-                        "SELECT *, MATCH(title, developer, region, keywords, description) " +
+                        "SELECT SQL_CALC_FOUND_ROWS *, MATCH(title, developer, region, keywords, description) " +
                         "   AGAINST (? IN NATURAL LANGUAGE MODE) AS score " +
                         "FROM resources AS r LEFT JOIN resource_types AS t ON r.type = t.id " +
                         "LEFT JOIN resource_has_domain AS rd ON r.id = rd.resource_id " +
@@ -154,15 +156,27 @@ public class ResourceDAOImpl implements ResourceDAO {
             .append(targets.stream().map(a -> "?").collect(Collectors.joining(","))).append(")");
         }
         if (languages != null && !languages.isEmpty()) {
-            sql.append(" AND r.resource_language IN (")
-            .append(languages.stream().map(a -> "?").collect(Collectors.joining(","))).append(")");
+            sql.append(" AND r.resource_language ")
+                    .append("RLIKE CONCAT('\\\\b', ");
+            for (int i = 0; i < languages.size(); i++) {
+                sql.append("?");
+                if(i < languages.size() - 1) {
+                        sql.append(",")
+                                .append("'")
+                                .append("|")
+                                .append("'")
+                                .append(",");
+                }
+            }
+            sql.append(", '\\\\b')");
         }
 
         sql.append(" GROUP BY r.id");
         sql.append(" ORDER BY score DESC LIMIT ? OFFSET ?");
 
         try (Connection connection = ConnectionFactory.getInstance().getConnection();
-             PreparedStatement stmt = connection.prepareStatement(sql.toString())) {
+             PreparedStatement stmt = connection.prepareStatement(sql.toString());
+             PreparedStatement foundRowsStmt = connection.prepareStatement("SELECT FOUND_ROWS()")) {
 
             int i = 1;
             stmt.setString(i++, expandedQuery);
@@ -194,9 +208,15 @@ public class ResourceDAOImpl implements ResourceDAO {
             stmt.setInt(i, offset);
 
             ResultSet rs = stmt.executeQuery();
-            result = mapResources(rs, connection);
+            ResultSet count = foundRowsStmt.executeQuery();
 
+            if (count.next())
+                this.foundResourceCount = count.getInt(1);
+            count.close();
+
+            result = mapResources(rs, connection);
             rs.close();
+
 
         } catch (SQLException e) {
             System.out.println("Database Error Occurred");
@@ -227,90 +247,38 @@ public class ResourceDAOImpl implements ResourceDAO {
     }
 
     @Override
-    public Resource getResourceById(int id) {
-        List<Resource> result = null;
-
-        String sql =    "SELECT * FROM resources AS r " +
-                        "LEFT JOIN resource_types AS t ON r.type = t.id " +
-                        "WHERE r.id = ?";
-
-        try (Connection connection = ConnectionFactory.getInstance().getConnection();
-             PreparedStatement stmt = connection.prepareStatement(sql)) {
-
-            stmt.setInt(1, id);
-            ResultSet rs = stmt.executeQuery();
-
-            result = mapResources(rs, connection);
-
-            rs.close();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        if (result != null) {
-            return result.get(0);
-        }
-
-        return null;
-    }
-
-    @Override
     public List<Resource> getAllResources(int limit, int offset) {
         List<Resource> result = new ArrayList<>();
 
-        String sql =    "SELECT * FROM resources AS r " +
+        String sql =    "SELECT SQL_CALC_FOUND_ROWS * FROM resources AS r " +
                         "LEFT JOIN resource_types AS t ON r.type = t.id " +
                         "LIMIT ? OFFSET ?";
 
         try (Connection connection = ConnectionFactory.getInstance().getConnection();
-             PreparedStatement stmt = connection.prepareStatement(sql)
-             ) {
+             PreparedStatement stmt = connection.prepareStatement(sql);
+             PreparedStatement foundRowsStmt = connection.prepareStatement("SELECT FOUND_ROWS()"))
+        {
             stmt.setInt(1, limit);
             stmt.setInt(2, offset);
 
             ResultSet rs = stmt.executeQuery();
+            ResultSet count = foundRowsStmt.executeQuery();
+
+            if (count.next())
+                this.foundResourceCount = count.getInt(1);
+
+            count.close();
 
             result = mapResources(rs, connection);
 
             rs.close();
+
         } catch (SQLException e) {
             System.out.println("Database Error Occurred");
             System.out.println(e.getMessage());
         }
 
         return result;
-    }
-
-    @Override
-    public List<Resource> searchResourcesByName(String search) {
-        List<Resource> result = new ArrayList<>();
-
-        String sql =    "SELECT * FROM resources AS r " +
-                        "LEFT JOIN resource_types AS t ON r.type = t.id " +
-                        "WHERE r.title LIKE 1";
-
-        try (Connection connection = ConnectionFactory.getInstance().getConnection();
-             PreparedStatement stmt = connection.prepareStatement(sql)) {
-
-            stmt.setString(1, "'%" + search + "%'");
-            ResultSet rs = stmt.executeQuery();
-
-            result = mapResources(rs, connection);
-
-            rs.close();
-        } catch (SQLException e) {
-            System.out.println("Database Error Occurred");
-            System.out.println(e.getMessage());
-        }
-
-        return result;
-    }
-
-    @Override
-    public List<Resource> searchResourcesByKeyword(String keyword) {
-        //TODO
-        return Collections.emptyList();
     }
 
     public void insertResources(List<Resource> resources) {
@@ -382,5 +350,9 @@ public class ResourceDAOImpl implements ResourceDAO {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public int getFoundResourceCount() {
+        return foundResourceCount;
     }
 }

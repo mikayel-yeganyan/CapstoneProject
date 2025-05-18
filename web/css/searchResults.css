@@ -24,6 +24,10 @@ body {
     font-size: 18px;
     border: 1px solid #ddd;
     border-radius: 5px;
+    font-family: Cairo;
+    color: #003399;
+    font-weight: 400;
+
 }
 
 .search-button {
@@ -154,27 +158,23 @@ body {
     background-color: #f1f3f4;
 }
 
-/*can be safely removed*/
-.result-card {
-    margin-bottom: 24px;
-    padding: 16px;
-    background-color: #fff;
-    border-radius: 8px;
+.pagination {
+    display: block;
+    flex-direction: column;
+    align-items: flex-end;
+    text-align: center;
+    padding: 15px;
+    font-size: 18px;
 }
 
-/*can be safely removed*/
-.result-description {
-    font-size: 1rem;
-    font-weight: bold;
-    color: #6c757d; /* muted grey */
-    flex: 1;
-    margin-top: 6px;
+.pagination i {
+    cursor: pointer;
 }
-
-/*can be safely removed*/
-.description-row {
+.pagination i:hover {
+    color: #3187C8;
+}
+#resultSizeWrapper {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    gap: 20px;
+    align-items: center; /* optional: vertically align items */
 }
