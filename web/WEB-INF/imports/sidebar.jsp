@@ -13,13 +13,30 @@
         const checkboxes = document.querySelectorAll('.filter-option input[type="checkbox"]');
         checkboxes.forEach(function (checkbox) {
             checkbox.addEventListener('change', function () {
+                document.getElementById("pageInput").value = 1;
                 document.getElementById('searchForm').submit();
             });
         });
     });
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const sidebar = document.getElementById('sidebar');
+        if (!sidebar) return;
+
+        // Restore scroll position (from sessionStorage to keep it per‐tab)
+        const saved = sessionStorage.getItem('sidebarScroll');
+        if (saved !== null) {
+            sidebar.scrollTop = Number(saved);
+        }
+
+        // Whenever the user scrolls the sidebar, update the stored value
+        sidebar.addEventListener('scroll', () => {
+            sessionStorage.setItem('sidebarScroll', sidebar.scrollTop.toString());
+        });
+    });
 </script>
 
-<div class="sidebar">
+<div id="sidebar" class="sidebar">
 
     <c:choose>
         <c:when test="${empty sessionScope.types and empty sessionScope.domains and empty sessionScope.targets and empty sessionScope.languages}">
