@@ -11,9 +11,10 @@
 <%@ page import="java.util.Arrays" %>
 <%
     int id = Integer.parseInt(request.getParameter("id"));
-    Resource resource = new ResourceDAOImpl().getResourceById(id);
-    List<String> allTargets = Arrays.asList("Teachers", "Students", "Researchers"); // Define as needed
-    List<String> allKeywords = Arrays.asList("AI", "Education", "Math", "Science"); // Define as needed
+    ResourceDAOImpl dao = new ResourceDAOImpl();
+    Resource resource = dao.getResourceById(id);
+
+    List<String> allKeywords = dao.getAllKeywords();
 %>
 
 <!DOCTYPE html>
@@ -33,15 +34,6 @@
     Region: <input type="text" name="region" value="<%= resource.getRegion() %>" /><br/><br/>
     Language: <input type="text" name="language" value="<%= resource.getLanguage() %>" /><br/><br/>
     URL: <input type="text" name="url" value="<%= resource.getUrl() %>" /><br/><br/>
-
-    Target Audience:<br/>
-    <select name="target" multiple>
-        <% for (String option : allTargets) { %>
-        <option value="<%= option %>" <%= resource.getTarget().contains(option) ? "selected" : "" %>>
-            <%= option %>
-        </option>
-        <% } %>
-    </select><br/><br/>
 
     Keywords:<br/>
     <select name="keywords" multiple>
