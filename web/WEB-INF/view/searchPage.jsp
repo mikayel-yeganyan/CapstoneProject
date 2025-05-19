@@ -62,12 +62,21 @@
         document.addEventListener("DOMContentLoaded", function () {
             const form = document.getElementById("searchForm");
             const pageInput = document.getElementById("pageInput");
+            const loader = document.getElementById("loadingOverlay");
 
-            if (form && pageInput) {
+            if (form) {
+
                 form.addEventListener("submit", function () {
-                    pageInput.value = "1";
+                    if (pageInput) {
+                        pageInput.value = "1";
+                    }
+                    loader.style.display = "flex";
                 });
             }
+        });
+
+        window.addEventListener("beforeunload", function () {
+            document.getElementById("loadingOverlay").style.display = "flex";
         });
     </script>
 </head>
@@ -75,6 +84,11 @@
 
 <!-- Include Navigation Bar -->
 <%@ include file="../imports/navbar.html" %>
+
+<!-- Spinner -->
+<div id="loadingOverlay">
+    <div class="spinner"></div>
+</div>
 
 <!-- Search Bar -->
 <div class="search-container">
