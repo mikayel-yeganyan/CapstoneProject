@@ -14,6 +14,7 @@ public class Resource {
     private String description;
     private List<String> target;
     private List<String> domain;
+    private int sheetRowIndex;
 
     public Resource() {}
 
@@ -61,4 +62,7 @@ public class Resource {
 
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
+
+    public int getSheetRowIndex() { return sheetRowIndex; }
+    public void setSheetRowIndex(int sheetRowIndex) { this.sheetRowIndex = sheetRowIndex; }
 }

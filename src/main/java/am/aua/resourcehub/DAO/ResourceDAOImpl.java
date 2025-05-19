@@ -298,17 +298,21 @@ public class ResourceDAOImpl implements ResourceDAO {
     public List<Resource> getAllResources(int limit, int offset) {
         List<Resource> result = new ArrayList<>();
 
-        String sql =    "SELECT SQL_CALC_FOUND_ROWS * FROM resources AS r " +
-                        "LEFT JOIN resource_types AS t ON r.type = t.id " +
-                        "LIMIT ? OFFSET ?";
+        StringBuilder sql = new StringBuilder(  "SELECT SQL_CALC_FOUND_ROWS * FROM resources AS r " +
+                                                "LEFT JOIN resource_types AS t ON r.type = t.id "
+        );
 
+        if (limit >= 0 && offset >= 0) {
+            sql.append("LIMIT ? OFFSET ?");
+        }
         try (Connection connection = ConnectionFactory.getInstance().getConnection();
-             PreparedStatement stmt = connection.prepareStatement(sql);
+             PreparedStatement stmt = connection.prepareStatement(sql.toString());
              PreparedStatement foundRowsStmt = connection.prepareStatement("SELECT FOUND_ROWS()"))
         {
-            stmt.setInt(1, limit);
-            stmt.setInt(2, offset);
-
+            if (limit >= 0 && offset >= 0) {
+                stmt.setInt(1, limit);
+                stmt.setInt(2, offset);
+            }
             ResultSet rs = stmt.executeQuery();
             ResultSet count = foundRowsStmt.executeQuery();
 
@@ -334,9 +338,9 @@ public class ResourceDAOImpl implements ResourceDAO {
             System.out.println("Nothing to add");
             return;
         }
-        StringBuilder sql1 = new StringBuilder("INSERT INTO resources (title, type, developer, description, region, resource_language, keywords, link) VALUES ");
-        StringBuilder sql2 = new StringBuilder("INSERT INTO resource_has_target (resource_id, target_id) VALUES ");
-        StringBuilder sql3 = new StringBuilder("INSERT INTO resource_has_domain (resource_id, domain_id) VALUES ");
+        StringBuilder sql1 = new StringBuilder("INSERT IGNORE INTO resources (title, type, developer, description, region, resource_language, keywords, link) VALUES ");
+        StringBuilder sql2 = new StringBuilder("INSERT IGNORE INTO resource_has_target (resource_id, target_id) VALUES ");
+        StringBuilder sql3 = new StringBuilder("INSERT IGNORE INTO resource_has_domain (resource_id, domain_id) VALUES ");
 
         try(Connection connection = ConnectionFactory.getInstance().getConnection()) {
 
@@ -402,6 +406,29 @@ public class ResourceDAOImpl implements ResourceDAO {
 
     public int getFoundResourceCount() {
         return foundResourceCount;
+    }
+
+    public String removeResourceWithId(int id) {
+            String sql = "DELETE FROM resources WHERE id = ?";
+
+            try (Connection connection = ConnectionFactory.getInstance().getConnection();
+                 PreparedStatement stmt = connection.prepareStatement(sql)) {
+
+                stmt.setInt(1, id);
+                int affectedRows = stmt.executeUpdate();
+
+                if (affectedRows == 0) {
+                    return "No resource found with ID: " + id;
+                } else {
+                    return "Resource with ID " + id + " was deleted.";
+                }
+
+            } catch (SQLException e) {
+                System.err.println("Database error during resource deletion.");
+                e.printStackTrace();
+                return "something went wrong " + e.getMessage();
+            }
+
     }
 
 }

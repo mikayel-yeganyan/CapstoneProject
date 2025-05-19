@@ -43,7 +43,7 @@
 </head>
 <h2>Edit Resource</h2>
 
-<form action="editResource" method="post">
+<form action="edit-resource" method="post">
     <input type="hidden" name="id" value="<%= resource.getId() %>" />
 
     Type: <input type="text" name="type" value="<%= resource.getType() %>" required /><br/><br/>
