@@ -8,12 +8,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -22,6 +17,58 @@ public class ResourceDAOImpl implements ResourceDAO {
     int foundResourceCount;
 
     public ResourceDAOImpl() {}
+
+    public void updateResource(Resource resource) {
+        String sql = "UPDATE resources SET title = ?, description = ? WHERE id = ?";
+        String targetJoined = String.join(",", resource.getTarget());
+        String keywordsJoined = String.join(",", resource.getKeywords());
+
+        try (Connection conn = ConnectionFactory.getInstance().getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, resource.getId());
+            stmt.setString(2, resource.getType());
+            stmt.setString(3, resource.getTitle());
+            stmt.setString(4,targetJoined);
+            stmt.setString(5, resource.getDeveloper());
+            stmt.setString(6, resource.getRegion());
+            stmt.setString(7, resource.getLanguage());
+            stmt.setString(8, keywordsJoined);
+            stmt.setString(9, resource.getUrl());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public List<String> getAllKeywords() {
+        Set<String> uniqueKeywords = new LinkedHashSet<>();
+        String sql = "SELECT keywords FROM resources"; // No DISTINCT needed
+
+        try (Connection conn = ConnectionFactory.getInstance().getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                String keywordStr = rs.getString("keywords");
+                if (keywordStr != null) {
+                    String[] keywords = keywordStr.split(",");
+                    for (String k : keywords) {
+                        String trimmed = k.trim();
+                        if (!trimmed.isEmpty()) {
+                            uniqueKeywords.add(trimmed);
+                        }
+                    }
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return new ArrayList<>(uniqueKeywords);
+    }
+
 
     private List<Resource> mapResources(ResultSet rs, Connection connection) throws SQLException {
         List<Resource> resources = new ArrayList<>();
@@ -215,6 +262,7 @@ public class ResourceDAOImpl implements ResourceDAO {
             count.close();
 
             result = mapResources(rs, connection);
+
             rs.close();
 
 
@@ -250,17 +298,21 @@ public class ResourceDAOImpl implements ResourceDAO {
     public List<Resource> getAllResources(int limit, int offset) {
         List<Resource> result = new ArrayList<>();
 
-        String sql =    "SELECT SQL_CALC_FOUND_ROWS * FROM resources AS r " +
-                        "LEFT JOIN resource_types AS t ON r.type = t.id " +
-                        "LIMIT ? OFFSET ?";
+        StringBuilder sql = new StringBuilder(  "SELECT SQL_CALC_FOUND_ROWS * FROM resources AS r " +
+                                                "LEFT JOIN resource_types AS t ON r.type = t.id "
+        );
 
+        if (limit >= 0 && offset >= 0) {
+            sql.append("LIMIT ? OFFSET ?");
+        }
         try (Connection connection = ConnectionFactory.getInstance().getConnection();
-             PreparedStatement stmt = connection.prepareStatement(sql);
+             PreparedStatement stmt = connection.prepareStatement(sql.toString());
              PreparedStatement foundRowsStmt = connection.prepareStatement("SELECT FOUND_ROWS()"))
         {
-            stmt.setInt(1, limit);
-            stmt.setInt(2, offset);
-
+            if (limit >= 0 && offset >= 0) {
+                stmt.setInt(1, limit);
+                stmt.setInt(2, offset);
+            }
             ResultSet rs = stmt.executeQuery();
             ResultSet count = foundRowsStmt.executeQuery();
 
@@ -286,9 +338,9 @@ public class ResourceDAOImpl implements ResourceDAO {
             System.out.println("Nothing to add");
             return;
         }
-        StringBuilder sql1 = new StringBuilder("INSERT INTO resources (title, type, developer, description, region, resource_language, keywords, link) VALUES ");
-        StringBuilder sql2 = new StringBuilder("INSERT INTO resource_has_target (resource_id, target_id) VALUES ");
-        StringBuilder sql3 = new StringBuilder("INSERT INTO resource_has_domain (resource_id, domain_id) VALUES ");
+        StringBuilder sql1 = new StringBuilder("INSERT IGNORE INTO resources (title, type, developer, description, region, resource_language, keywords, link) VALUES ");
+        StringBuilder sql2 = new StringBuilder("INSERT IGNORE INTO resource_has_target (resource_id, target_id) VALUES ");
+        StringBuilder sql3 = new StringBuilder("INSERT IGNORE INTO resource_has_domain (resource_id, domain_id) VALUES ");
 
         try(Connection connection = ConnectionFactory.getInstance().getConnection()) {
 
@@ -355,4 +407,28 @@ public class ResourceDAOImpl implements ResourceDAO {
     public int getFoundResourceCount() {
         return foundResourceCount;
     }
+
+    public String removeResourceWithId(int id) {
+            String sql = "DELETE FROM resources WHERE id = ?";
+
+            try (Connection connection = ConnectionFactory.getInstance().getConnection();
+                 PreparedStatement stmt = connection.prepareStatement(sql)) {
+
+                stmt.setInt(1, id);
+                int affectedRows = stmt.executeUpdate();
+
+                if (affectedRows == 0) {
+                    return "No resource found with ID: " + id;
+                } else {
+                    return "Resource with ID " + id + " was deleted.";
+                }
+
+            } catch (SQLException e) {
+                System.err.println("Database error during resource deletion.");
+                e.printStackTrace();
+                return "something went wrong " + e.getMessage();
+            }
+
+    }
+
 }

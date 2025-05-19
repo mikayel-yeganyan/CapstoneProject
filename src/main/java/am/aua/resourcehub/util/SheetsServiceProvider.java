@@ -9,7 +9,9 @@ import com.google.api.services.sheets.v4.SheetsScopes;
 import com.google.auth.http.HttpCredentialsAdapter;
 import com.google.auth.oauth2.GoogleCredentials;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.GeneralSecurityException;
@@ -25,20 +27,21 @@ public class SheetsServiceProvider {
      * If modifying these scopes, delete your previously saved tokens/ folder.
      */
     private static final List<String> SCOPES =
-            Collections.singletonList(SheetsScopes.SPREADSHEETS_READONLY);
+            Collections.singletonList(SheetsScopes.SPREADSHEETS);
     private static final String CREDENTIALS_FILE_PATH = "src/main/resources/credentials.json";
 
 
 
     public static Sheets getSheetsService() throws GeneralSecurityException, IOException {
-        GoogleCredentials credentials = GoogleCredentials.fromStream(Files.newInputStream(Paths.get(CREDENTIALS_FILE_PATH)))
-                .createScoped(Collections.singleton(SheetsScopes.SPREADSHEETS_READONLY));
+        InputStream in = SheetsServiceProvider.class.getClassLoader().getResourceAsStream("credentials.json");
+        if(in == null) {
+            throw new FileNotFoundException("Resource not found: credentials.json");
+        }
+        GoogleCredentials credentials = GoogleCredentials.fromStream(in)
+                .createScoped(SCOPES);
 
         // Build a new authorized API client service.
         final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
-
-        final String spreadsheetId = "1nGqNhOx-BNxReNAuNrQ414Z82UqRSXAiYT4w6CMkpMI"; // Link to manually edited "Resource hub material" spreadsheet
-        final String range = "Resource hub materials";
 
         return new Sheets.Builder(HTTP_TRANSPORT, JSON_FACTORY,
                 new HttpCredentialsAdapter(credentials))
