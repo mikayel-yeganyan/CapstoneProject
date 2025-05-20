@@ -10,10 +10,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-
+/**
+ * Utility class used for expanding a user query with synonyms
+ */
 public class SynonymProvider {
     private final Dictionary dictionary;
     private final Map<String, List<String>> manualSynonyms;
+
 
     public SynonymProvider() throws JWNLException {
         dictionary = Dictionary.getDefaultResourceInstance();
@@ -21,6 +24,12 @@ public class SynonymProvider {
         manualSynonyms = new HashMap<String, List<String>>(); //add any manual synonyms here if needed
     }
 
+    /**
+     * Get synonyms from the dictionary
+     * @param term the term for which to get synonyms
+     * @return a Set of synonyms including the term itself
+     * @throws JWNLException
+     */
     public Set<String> getSynonyms(String term) throws JWNLException {
         Set<String> result = new HashSet<String>();
         result.add(term);

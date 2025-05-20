@@ -19,11 +19,13 @@ public class SearchServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String search = req.getParameter("query");
+        //variables used for pagination
         String pageString = req.getParameter("page");
         int    page  = pageString == null || pageString.isEmpty() ? 1 : Math.max(1, Integer.parseInt(req.getParameter("page")));
         int pageSize = 20;
         int offset = (page - 1) * pageSize;
 
+        //get the filtering options from checked by the user
         List<String> filterTypes = req.getParameterValues("types") == null ? null : Arrays.asList(req.getParameterValues("types"));
         List<String> filterDomains = req.getParameterValues("domains") == null ? null : Arrays.asList(req.getParameterValues("domains"));
         List<String> filterTargets = req.getParameterValues("targets") == null ? null : Arrays.asList(req.getParameterValues("targets"));
@@ -46,9 +48,9 @@ public class SearchServlet extends HttpServlet {
         req.setAttribute("searchResult",
                 resourceDAO.search(search, filterTypes, filterTargets, filterRegions, filterDomains, filterLanguages, pageSize, offset));
 
+        //update pagination variables
         int resourceCount = resourceDAO.getFoundResourceCount();
         int noOfPages = (int) Math.ceil(resourceCount * 1.0 / pageSize);
-
         req.setAttribute("totalResources", resourceCount);
         req.setAttribute("noOfPages", noOfPages);
         req.setAttribute("currentPage", page);
