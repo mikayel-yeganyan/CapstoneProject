@@ -17,7 +17,7 @@ public class Main {
     //We mainly used it for testing and to ensure consistent data across other machines
     public static void main(String[] args) {
 
-        SheetResourceDAO sheetResource = new SheetResourceDAO();
+        /*SheetResourceDAO sheetResource = new SheetResourceDAO();
 
         String spreadsheetId = "1nGqNhOx-BNxReNAuNrQ414Z82UqRSXAiYT4w6CMkpMI"; // Link to manually edited "Resource hub material" spreadsheet
         String range = "Resource hub materials!A4:Z"; //the name of the sheet
@@ -45,6 +45,6 @@ public class Main {
 
         ResourceDAOImpl dao = new ResourceDAOImpl();
         dao.insertResources(resources);
-
+*/
     }
 }

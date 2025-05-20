@@ -2,12 +2,12 @@ package am.aua.resourcehub.servlets;
 
 import am.aua.resourcehub.DAO.AdminDAO;
 
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 
 @WebServlet(name = "Login", value = "/admin-login")
@@ -23,11 +23,12 @@ public class AdminLoginServlet extends HttpServlet {
             //store the admin username in session scope to prevent unauthorized access
             session.setAttribute("adminUser", username);
             //redirect the admin to the dashboard
-            resp.sendRedirect("admin/adminDashboard.jsp");
+            req.getRequestDispatcher("WEB-INF/admin/adminDashboard.jsp").forward(req, resp);
+
         } else {
             //authentication failed
             req.setAttribute("errorMessage", "Invalid username or password");
-            req.getRequestDispatcher("admin/adminLogin.jsp").forward(req, resp);
+            req.getRequestDispatcher("WEB-INF/admin/adminLogin.jsp").forward(req, resp);
         }
     }
 }

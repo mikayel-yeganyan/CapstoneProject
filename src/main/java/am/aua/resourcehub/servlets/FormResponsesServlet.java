@@ -3,11 +3,11 @@ package am.aua.resourcehub.servlets;
 import am.aua.resourcehub.DAO.SheetResourceDAO;
 import am.aua.resourcehub.model.Resource;
 
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,7 +19,7 @@ public class FormResponsesServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         if (req.getSession().getAttribute("adminUser") == null) {
-            req.getRequestDispatcher("admin/adminLogin.jsp").forward(req, resp);
+            req.getRequestDispatcher("WEB-INF/admin/adminLogin.jsp").forward(req, resp);
         }
         SheetResourceDAO sheetResource = new SheetResourceDAO();
 
@@ -46,12 +46,12 @@ public class FormResponsesServlet extends HttpServlet {
             System.out.println("Back from getResourcesFromSheet, received " + resources.size());
 
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            req.setAttribute("msg", "fetching from the sheet failed " + e.getMessage());
         }
 
         req.setAttribute("resources", resources);
         req.setAttribute("action", "approve");
 
-        req.getRequestDispatcher("admin/adminDashboard.jsp").forward(req, resp);
+        req.getRequestDispatcher("WEB-INF/admin/adminDashboard.jsp").forward(req, resp);
     }
 }

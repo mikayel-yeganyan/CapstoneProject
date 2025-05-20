@@ -2,11 +2,11 @@ package am.aua.resourcehub.servlets;
 
 import am.aua.resourcehub.DAO.AdminDAO;
 
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @WebServlet(name = "Admin Register", value = "/admin-register")
@@ -23,12 +23,11 @@ public class AdminRegisterServlet extends HttpServlet {
         boolean success = adminDAO.createAdmin(username, password); // true if the admin was successfully registered
 
         if (success) {
-            //redirect to the dashboard
-            resp.sendRedirect("admin/adminDashboard.jsp");
+            req.getRequestDispatcher("WEB-INF/admin/adminLogin.jsp").forward(req, resp);
         } else {
             //something went wrong try again
             req.setAttribute("errorMessage", "Failed to create admin user");
-            req.getRequestDispatcher("admin/adminRegister.jsp").forward(req, resp);
+            req.getRequestDispatcher("WEB-INF/admin/adminRegister.jsp").forward(req, resp);
         }
 
     }
