@@ -14,6 +14,7 @@ import java.util.stream.Stream;
 
 public class ResourceDAOImpl implements ResourceDAO {
 
+    //the number of resources that matched the last search
     int foundResourceCount;
 
     public ResourceDAOImpl() {}
@@ -70,6 +71,13 @@ public class ResourceDAOImpl implements ResourceDAO {
     }
 
 
+    /**
+     * Utility method for mapping the resources from a ResultSet to actual List of Resource objects
+     * @param rs ResultSet returned by the user query
+     * @param connection current Database Connection object
+     * @return List of resources
+     * @throws SQLException
+     */
     private List<Resource> mapResources(ResultSet rs, Connection connection) throws SQLException {
         List<Resource> resources = new ArrayList<>();
 
@@ -274,6 +282,11 @@ public class ResourceDAOImpl implements ResourceDAO {
         return result;
     }
 
+    /**
+     * Utility method for preprocessing raw queries
+     * @param raw String query inputted by the user
+     * @return a list Strings of the tokenized and preprocessed queries
+     */
     private static List<String> preprocessQuery(String raw) {
         if (raw == null || raw.isEmpty()) {
             return Collections.emptyList();
@@ -409,13 +422,21 @@ public class ResourceDAOImpl implements ResourceDAO {
     }
 
     public String removeResourceWithId(int id) {
-            String sql = "DELETE FROM resources WHERE id = ?";
+            String sql1 = "DELETE FROM resource_has_domain WHERE resource_id = ?";
+            String sql2 = "DELETE FROM resource_has_target WHERE resource_id = ?";
+            String sql3 = "DELETE FROM resources WHERE id = ?";
 
             try (Connection connection = ConnectionFactory.getInstance().getConnection();
-                 PreparedStatement stmt = connection.prepareStatement(sql)) {
+                 PreparedStatement stmt1 = connection.prepareStatement(sql1);
+                 PreparedStatement stmt2 = connection.prepareStatement(sql2);
+                 PreparedStatement stmt3 = connection.prepareStatement(sql3);) {
 
-                stmt.setInt(1, id);
-                int affectedRows = stmt.executeUpdate();
+                stmt1.setInt(1, id);
+                stmt2.setInt(1, id);
+                stmt3.setInt(1, id);
+                stmt1.executeUpdate();
+                stmt2.executeUpdate();
+                int affectedRows = stmt3.executeUpdate();
 
                 if (affectedRows == 0) {
                     return "No resource found with ID: " + id;

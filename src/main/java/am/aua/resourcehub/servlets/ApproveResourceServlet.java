@@ -27,6 +27,7 @@ public class ApproveResourceServlet extends HttpServlet {
         ResourceDAOImpl resourceDAO = new ResourceDAOImpl();
         SheetResourceDAO sheetResourceDAO = new SheetResourceDAO();
 
+        // a mapping of columns to indices corresponding to our spreadsheet connected to google forms
         Map<String, Integer> formSpreadsheet = new HashMap<>();
         formSpreadsheet.put("title", 1);
         formSpreadsheet.put("developer", 2);
@@ -40,9 +41,9 @@ public class ApproveResourceServlet extends HttpServlet {
         formSpreadsheet.put("url", 10);
         formSpreadsheet.put("approved", 11);
 
-        int rowIndex = Integer.parseInt(req.getParameter("rowIndex"));
-        String sheetName = "Form Responses 1";
-        String sheetId = "1EJXdbsqOlEV3OUwCJkQli7aYpr79jjE71K18klNaZ_4";
+        int rowIndex = Integer.parseInt(req.getParameter("rowIndex")); //the row index of the resource to be marked approved
+        String sheetName = "Form Responses 1"; // the name of the spreadsheet connected to google forms
+        String sheetId = "1EJXdbsqOlEV3OUwCJkQli7aYpr79jjE71K18klNaZ_4"; // the id of the spreadsheet connected to google forms
         Resource resource = null;
 
         try{

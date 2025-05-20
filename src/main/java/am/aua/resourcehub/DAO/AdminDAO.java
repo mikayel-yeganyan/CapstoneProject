@@ -10,9 +10,19 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * DAO layer for manipulation admin credentials in the database
+ */
 public class AdminDAO {
     private static final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
+    /**
+     * Returns true if the given username and password exists in the database
+     *
+     * @param username the admin username
+     * @param password the admin password
+     * @return true if the username and password was authenticated
+     */
     public boolean authenticate(String username, String password) {
         String sql = "SELECT pass FROM admin_user WHERE username = ?";
 
@@ -33,6 +43,14 @@ public class AdminDAO {
 
         return false;
     }
+
+    /**
+     * Creates a new admin with given username and password
+     *
+     * @param username the admin username
+     * @param plainPassword the raw password given in the form
+     * @return true if the user was created
+     */
     public boolean createAdmin(String username, String plainPassword) {
         String sql = "INSERT INTO admin_user (username, pass) VALUES (?, ?)";
         String hashedPassword = PasswordUtil.hashPassword(plainPassword);

@@ -18,20 +18,24 @@ import java.security.GeneralSecurityException;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Utility class used for providing a service to communicate with Google sheets, uses Google Sheets API
+ */
 public class SheetsServiceProvider {
     private static final String APPLICATION_NAME = "OTTERS Resource Hub";
     private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
 
-    /**
-     * Global instance of the scopes required by this quickstart.
-     * If modifying these scopes, delete your previously saved tokens/ folder.
-     */
     private static final List<String> SCOPES =
             Collections.singletonList(SheetsScopes.SPREADSHEETS);
     private static final String CREDENTIALS_FILE_PATH = "src/main/resources/credentials.json";
 
 
-
+    /**
+     * Get a Sheets object to manipulate the Google sheets
+     * @return Sheets object
+     * @throws GeneralSecurityException if no access to the spreadsheet
+     * @throws IOException if cannot read credentials.json
+     */
     public static Sheets getSheetsService() throws GeneralSecurityException, IOException {
         InputStream in = SheetsServiceProvider.class.getClassLoader().getResourceAsStream("credentials.json");
         if(in == null) {

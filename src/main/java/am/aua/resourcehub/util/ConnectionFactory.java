@@ -4,6 +4,9 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import org.apache.commons.dbcp2.BasicDataSource;
 
+/**
+ * Utility class to get a connection from a connection pool
+ */
 public class ConnectionFactory {
 
     private static ConnectionFactory instance;
@@ -27,6 +30,10 @@ public class ConnectionFactory {
         dataSource.setDriverClassName(driverClass);
     }
 
+    /**
+     * Get a single instance of a ConnectionFactory object
+     * @return a ConnectionFactory
+     */
     public static synchronized ConnectionFactory getInstance()
     {
         if(instance == null){
@@ -36,6 +43,11 @@ public class ConnectionFactory {
         return instance;
     }
 
+    /**
+     * Get a connection to the db
+     * @return Connection object
+     * @throws SQLException if connection failed
+     */
     public Connection getConnection() throws SQLException
     {
         return dataSource.getConnection();

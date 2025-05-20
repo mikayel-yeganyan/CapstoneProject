@@ -14,10 +14,23 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * DAO layer used for manipulating resources in Google Spreadsheet using Google Sheets API
+ */
 public class SheetResourceDAO {
 
     public SheetResourceDAO() { }
 
+    /**
+     * Gets all the resources marked Approved = false from the Google Sheet
+     * @param spreadsheetId Google Spreadsheet id
+     * @param range Range of rows and columns including the sheet name
+     * @param headerIndices A mapping of column names to their indices in the spreadsheet
+     * @return A list of unapproved resources populated from the spreadsheet
+     * @throws IllegalArgumentException If mapping of columns is wrong
+     * @throws GeneralSecurityException If service account couldn't access the given spreadsheet
+     * @throws IOException If problems reading the credentials.json file
+     */
     public List<Resource> getUnapprovedResourcesFromForm(String spreadsheetId, String range, Map<String, Integer> headerIndices) throws IllegalArgumentException, GeneralSecurityException, IOException{
         List<String> requiredHeaders = Arrays.asList("title", "type", "developer", "target", "region", "language", "domain", "url", "keywords", "description", "approved");
         for (String header : requiredHeaders) {
@@ -55,8 +68,16 @@ public class SheetResourceDAO {
         return resources;
     }
 
-    //returns resources from the remote Google Sheets spreadsheet given the spreadsheet id, value range and a map of column names with their indices in a row
-    //throws an exception if unable to access the Google Sheets
+    /**
+     * Gets all the resources from the Google Sheet
+     * @param spreadsheetId Google Spreadsheet id
+     * @param range Range of rows and columns including the sheet name
+     * @param headerIndices A mapping of column names to their indices in the spreadsheet
+     * @return A list of resources populated from the spreadsheet
+     * @throws IllegalArgumentException If mapping of columns is wrong
+     * @throws GeneralSecurityException If service account couldn't access the given spreadsheet
+     * @throws IOException If problems reading the credentials.json file
+     */
     public List<Resource> getResourcesFromSheet(String spreadsheetId, String range, Map<String, Integer> headerIndices) throws IllegalArgumentException, GeneralSecurityException, IOException {
 
         List<String> requiredHeaders = Arrays.asList("title", "type", "developer", "target", "region", "language", "domain", "url", "keywords", "description");
@@ -84,6 +105,13 @@ public class SheetResourceDAO {
 
         return resources;
     }
+
+    /**
+     * Utility method for mapping a single row of a spreadsheet to actual resource object
+     * @param headerIndices A mapping of column names to their indices in the spreadsheet
+     * @param row The single row to be mapped to a single Resource
+     * @return The new Resource
+     */
     private Resource mapSheetRowToResource(Map<String, Integer> headerIndices, List<Object> row) {
         Resource r = new Resource();
 
@@ -103,6 +131,15 @@ public class SheetResourceDAO {
         return r;
     }
 
+    /**
+     * Marks the given resource as approved in the given spreadsheet
+     * @param spreadsheetId The id of the spreadsheet to be updated
+     * @param sheetName the name of the sheet
+     * @param rowIndex row index of the resource to be approved
+     * @param approvedColIndex the column index of the approved field
+     * @throws GeneralSecurityException If problems accessing the spreadsheet
+     * @throws IOException If problems reading the credentials.json
+     */
     public void markResourceAsApproved(String spreadsheetId, String sheetName, int rowIndex, int approvedColIndex)
             throws GeneralSecurityException, IOException {
 
@@ -123,6 +160,11 @@ public class SheetResourceDAO {
         System.out.println("Marked row " + rowIndex + " as approved.");
     }
 
+    /**
+     * Returns the letter column of the given coulumn's index (e.g. 3->C)
+     * @param index the index of the column starting from 0
+     * @return the letter corresponding to the given index in the sheets
+     */
     private String columnIndexToLetter(int index) {
         StringBuilder result = new StringBuilder();
         while (index >= 0) {
@@ -132,6 +174,16 @@ public class SheetResourceDAO {
         return result.toString();
     }
 
+    /**
+     * Get a single resource given the row index of the resource in a spreadsheet
+     * @param spreadsheetId the spreadsheet id to be accessed
+     * @param sheetName the name of the sheet
+     * @param headerIndices mapping of headers to indices
+     * @param rowIndex the index row index of the resource to be accessed
+     * @return a constructed Resource object
+     * @throws GeneralSecurityException If problems accessing the spreadsheet
+     * @throws IOException If problems reading the credentials.json
+     */
     public Resource getResourceByRowIndex(String spreadsheetId,  String sheetName, Map<String, Integer> headerIndices, int rowIndex) throws GeneralSecurityException, IOException {
         Sheets service = SheetsServiceProvider.getSheetsService();
 

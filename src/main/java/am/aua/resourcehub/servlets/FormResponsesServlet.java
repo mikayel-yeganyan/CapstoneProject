@@ -27,6 +27,7 @@ public class FormResponsesServlet extends HttpServlet {
         String range = "Form Responses 1!A2:Z"; //the name of the sheet
         List<Resource> resources = new ArrayList<>();
 
+        // a mapping of columns to indices corresponding to our spreadsheet connected to google forms
         Map<String, Integer> formSpreadsheet = new HashMap<>();
         formSpreadsheet.put("title", 1);
         formSpreadsheet.put("developer", 2);
