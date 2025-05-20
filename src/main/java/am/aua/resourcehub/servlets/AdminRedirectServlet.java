@@ -9,6 +9,8 @@ import java.io.IOException;
 @WebServlet("/admin")
 public class AdminRedirectServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        req.getSession().invalidate();
+
         resp.sendRedirect("admin/adminLogin.jsp");
     }
 }
